@@ -9,6 +9,7 @@ using ProcessLog;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Threading;
+using System.Data;
 
 namespace UpdateBazeKMZ
 {
@@ -59,45 +60,68 @@ namespace UpdateBazeKMZ
         {
         }
 
+        private DataTable getTable()
+        {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("Production", typeof(string));
+            dt.Columns.Add("Assemblyes", typeof(string));
+            dt.Columns.Add("DetailID", typeof(string));
+            dt.Columns.Add("CountAssembly", typeof(float));
+            dt.Columns.Add("CountProductions", typeof(float));
+            dt.Columns.Add("TypeDetais", typeof(int));
+            dt.Columns.Add("TypeAssembly", typeof(int));
+            dt.Columns.Add("Sign", typeof(int));
+            dt.Columns.Add("PrimaryApplicability", typeof(string));
+
+            return dt;
+        }
+
         public new void ReadFile(string filePath)
         {
-            List<FileM104Data> fileData = new List<FileM104Data>();
+
             var FileD = base.ReadFile(filePath, Encoding.Default);
             var FileLen = FileD.Count();
             ConnectionHandler cHandle = ConnectionHandler.GetInstance();
+
+            DataTable dataTable = getTable();
+            
+
             for (int i = 0; i < FileLen; ++i)
             {
                 if (FileD[i].Length < 5) continue;
                 FileM104Data data = new FileM104Data();
                 try
                 {
-                        
-                    data.Production = FileD[i].Substring(136, 10).Trim();
-                    data.Assemblyes = FileD[i].Substring(25, 25).Trim();
-                    data.CountAssembly = float.Parse(FileD[i].Substring(75, 9).Trim().Replace('.', ','));
-                    data.CountProductions = float.Parse(FileD[i].Substring(84, 9).Trim().Replace('.', ','));
-                    data.TypeDetais = int.Parse(FileD[i].Substring(93, 1));
-                    data.TypeAssembly = int.Parse(FileD[i].Substring(94, 1));
-                    data.Sign = int.Parse(FileD[i].Substring(95, 1));
-                    data.PrimaryApplicability = FileD[i].Substring(96, 25).Trim();
 
-                    data.Detail = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = {0} ",
-                                          FileD[i].Substring(50, 25).Trim()));
-                    if (data.Detail == "0")
+                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = {0} ",
+                      FileD[i].Substring(50, 25).Trim()));
+
+                    if (DetailID == "0")
                     {
-                        Log.Add(string.Format("Для Detail = {0} не найден DetailID", FileD[i].Substring(50,25).Trim()));
+                        Log.Add(string.Format("Для Detail = {0} не найден DetailID", FileD[i].Substring(50, 25).Trim()));
                         continue;
-                    }else
-                    {
-                        fileData.Add(data);
                     }
+                    else
+                    {
+                        dataTable.Rows.Add(FileD[i].Substring(136, 10).Trim(),
+                                           FileD[i].Substring(25, 25).Trim(),
+                                           DetailID,
+                                           float.Parse(FileD[i].Substring(75, 9).Trim().Replace('.', ',')),
+                                           float.Parse(FileD[i].Substring(84, 9).Trim().Replace('.', ',')),
+                                           int.Parse(FileD[i].Substring(93, 1)),
+                                           int.Parse(FileD[i].Substring(94, 1)),
+                                           int.Parse(FileD[i].Substring(95, 1)),
+                                           FileD[i].Substring(96, 25).Trim()
+                                           );
+                    }
+
                 }
                 catch (Exception e)
                 {
                     throw new ReadFileErrorException(string.Format("Ошибка чтения файла ReadFile(M104Process.cs) Итерация {0}", i));
                 }
             }
-            Data = fileData;
         }
 
 
