@@ -85,8 +85,8 @@ namespace UpdateBazeKMZ
             ConnectionHandler cHandle = ConnectionHandler.GetInstance();
 
             DataTable dataTable = getTable();
-            
 
+            cHandle.ExecuteQuery("DELETE FROM TBM104");
             for (int i = 0; i < FileLen; ++i)
             {
                 if (FileD[i].Length < 5) continue;
@@ -122,6 +122,8 @@ namespace UpdateBazeKMZ
                     throw new ReadFileErrorException(string.Format("Ошибка чтения файла ReadFile(M104Process.cs) Итерация {0}", i));
                 }
             }
+
+            cHandle.InsertBulkQuery(dataTable, "TBM104");
         }
 
 
