@@ -31,8 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.tsDate = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.tsLabInfo = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.gbImportInfo = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -49,7 +50,6 @@
             this.tbgpTableAdapter = new UpdateBazeKMZ.dsBaseKMZTableAdapters.TBGPTableAdapter();
             this.tbCodeProductsTableAdapter = new UpdateBazeKMZ.dsBaseKMZTableAdapters.TbCodeProductsTableAdapter();
             this.tBDetailIDTableAdapter = new UpdateBazeKMZ.dsBaseKMZTableAdapters.TBDetailIDTableAdapter();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusBar.SuspendLayout();
             this.gbImportInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsBaseKMZ)).BeginInit();
@@ -74,18 +74,24 @@
             this.tsDate.Name = "tsDate";
             this.tsDate.Size = new System.Drawing.Size(0, 17);
             // 
-            // tsProgressBar
-            // 
-            this.tsProgressBar.Name = "tsProgressBar";
-            this.tsProgressBar.Size = new System.Drawing.Size(100, 16);
-            this.tsProgressBar.Visible = false;
-            // 
             // tsLabInfo
             // 
             this.tsLabInfo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tsLabInfo.Name = "tsLabInfo";
             this.tsLabInfo.Size = new System.Drawing.Size(0, 17);
             this.tsLabInfo.Visible = false;
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
+            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
+            // 
+            // tsProgressBar
+            // 
+            this.tsProgressBar.Name = "tsProgressBar";
+            this.tsProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.tsProgressBar.Visible = false;
             // 
             // timer
             // 
@@ -118,7 +124,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(295, 39);
             this.button1.TabIndex = 9;
-            this.button1.Text = "button1";
+            this.button1.Text = "Загрузка файла M104";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -228,12 +234,6 @@
             // tBDetailIDTableAdapter
             // 
             this.tBDetailIDTableAdapter.ClearBeforeFill = true;
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
-            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // FrmMain
             // 
