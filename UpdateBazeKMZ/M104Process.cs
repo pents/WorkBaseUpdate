@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Threading;
 using System.Data;
+using System.IO;
 
 namespace UpdateBazeKMZ
 {
@@ -50,7 +51,7 @@ namespace UpdateBazeKMZ
 
     }
 
-    public class File_M104 : File
+    public class File_M104
     {
         /// <summary>
         /// Объект структуры данных 
@@ -77,48 +78,37 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
-        public new void ReadFile(string filePath)
+        public void ReadFile(string filePath)
         {
-
-            var FileD = base.ReadFile(filePath, Encoding.Default);
-            var FileLen = FileD.Count();
             ConnectionHandler cHandle = ConnectionHandler.GetInstance();
-
-            DataTable dataTable = getTable();
-
             cHandle.ExecuteQuery("DELETE FROM TBM104");
-            for (int i = 0; i < FileLen; ++i)
+            DataTable dataTable = getTable(); // создание таблицы
+            using (StreamReader fileStream = new StreamReader(filePath, Encoding.Default))
             {
-                if (FileD[i].Length < 5) continue;
-                FileM104Data data = new FileM104Data();
-                try
+                string currentLine = "";
+                while((currentLine = fileStream.ReadLine()).Length > 5)
                 {
-                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{0}'", 
-                        FileD[i].Substring(50, 25).Trim()));
+                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{0}'",
+                    currentLine.Substring(50, 25).Trim()));
 
                     if (DetailID == "0")
                     {
-                        Log.Add(string.Format("Для Detail = {0} не найден DetailID", FileD[i].Substring(50, 25).Trim()));
+                        Log.Add(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
                         continue;
                     }
                     else
                     {
-                        dataTable.Rows.Add(FileD[i].Substring(136, 10).Trim(),
-                                           FileD[i].Substring(25, 25).Trim(),
+                        dataTable.Rows.Add(currentLine.Substring(136, 10).Trim(),
+                                           currentLine.Substring(25, 25).Trim(),
                                            int.Parse(DetailID),
-                                           float.Parse(FileD[i].Substring(75, 9).Trim().Replace('.', ',')),
-                                           float.Parse(FileD[i].Substring(84, 9).Trim().Replace('.', ',')),
-                                           int.Parse(FileD[i].Substring(93, 1)),
-                                           int.Parse(FileD[i].Substring(94, 1)),
-                                           int.Parse(FileD[i].Substring(95, 1)),
-                                           FileD[i].Substring(96, 25).Trim()
+                                           float.Parse(currentLine.Substring(75, 9).Trim().Replace('.', ',')),
+                                           float.Parse(currentLine.Substring(84, 9).Trim().Replace('.', ',')),
+                                           int.Parse(currentLine.Substring(93, 1)),
+                                           int.Parse(currentLine.Substring(94, 1)),
+                                           int.Parse(currentLine.Substring(95, 1)),
+                                           currentLine.Substring(96, 25).Trim()
                                            );
                     }
-
-                }
-                catch (Exception e)
-                {
-                    throw new ReadFileErrorException(string.Format("Ошибка чтения файла ReadFile(M104Process.cs) Итерация {0} Сообщение:{1}", i, e.Message));
                 }
             }
 
@@ -127,21 +117,22 @@ namespace UpdateBazeKMZ
         }
 
 
-    internal class ReadFileErrorException : Exception
-    {
-        public ReadFileErrorException() {  }
-        public ReadFileErrorException(string message) : base(message)  {  }
-    }
+        internal class ReadFileErrorException : Exception
+        {
+            public ReadFileErrorException() { }
+            public ReadFileErrorException(string message) : base(message) { }
+        }
 
-    internal class WrongFileGivenException : Exception
-    {
-        public WrongFileGivenException() {  }
-        public WrongFileGivenException(string message) : base(message) {  }
-    }
+        internal class WrongFileGivenException : Exception
+        {
+            public WrongFileGivenException() { }
+            public WrongFileGivenException(string message) : base(message) { }
+        }
 
-    internal class WriteToDBErrorException : Exception
-    {
-        public WriteToDBErrorException()  {  }
-        public WriteToDBErrorException(string message) : base(message) {  }
+        internal class WriteToDBErrorException : Exception
+        {
+            public WriteToDBErrorException() { }
+            public WriteToDBErrorException(string message) : base(message) { }
+        }
     }
 }
