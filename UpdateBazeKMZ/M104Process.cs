@@ -14,23 +14,30 @@ using System.IO;
 
 namespace UpdateBazeKMZ
 {
+    public delegate void ProgressChanged(LoadProgressArgs args);
+    public delegate void ProgressNotify(string Msg);
+    public delegate void ProgressCompleted();
 
-    /// <summary>
-    /// Структура файла M014
-    /// </summary>
-    public class FileM104Data : FileHandler.FileData
+    public struct LoadProgressArgs
     {
-        public string Production;
-        public string Assemblyes;
-        public int DetailID;
-        public float CountAssembly;
-        public float CountProductions;
-        public int TypeDetais;
-        public int TypeAssembly;
-        public int Sign;
-        public string PrimaryApplicability;
-    }
+        public int currentProgress;
+        public int fullProgress;
+        public byte percentage;
+        public string message;
 
+        public LoadProgressArgs(int Current, int Full, string Msg)
+        {
+
+            currentProgress = Current;
+            fullProgress = Full;
+            percentage = (byte)(((float)currentProgress / (float)fullProgress) * 100);
+            message = Msg;
+        }
+
+        public LoadProgressArgs(int Current, int Full) : this(Current, Full, "")
+        {
+        }
+    }
 
     public class DBConnection
     {
@@ -41,7 +48,6 @@ namespace UpdateBazeKMZ
 
             conStr.DataSource = "10.255.7.203";
             conStr.InitialCatalog = "SGT_MMC";
-            //conStr.IntegratedSecurity = true; // true for testing purposes
             conStr.UserID = "UsersSGT";
             conStr.Password = "123QWEasd";
             conStr.PersistSecurityInfo = true;
@@ -53,10 +59,11 @@ namespace UpdateBazeKMZ
 
     public class File_M104
     {
-        /// <summary>
-        /// Объект структуры данных 
-        /// </summary>
-        public List<FileM104Data> Data { get; private set; }
+        
+        public event ProgressChanged progressChanged;
+        public event ProgressNotify progressNotify;
+        public event ProgressCompleted progressCompleted;
+
         public File_M104()
         {
         }
@@ -78,10 +85,25 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
+        private int totalLines(string filePath)
+        {
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+                int i = 0;
+                while (sr.ReadLine() != null) { ++i; }
+
+                return i;
+            }
+        }
+
         public void ReadFile(string filePath)
         {
             ConnectionHandler cHandle = ConnectionHandler.GetInstance();
             cHandle.ExecuteQuery("DELETE FROM TBM104");
+
+            int linesCount = totalLines(filePath);
+            int currentLineNumber = 1;
+
             DataTable dataTable = getTable(); // создание таблицы
             using (StreamReader fileStream = new StreamReader(filePath, Encoding.Default))
             {
@@ -94,6 +116,7 @@ namespace UpdateBazeKMZ
                     if (DetailID == "0")
                     {
                         Log.Add(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
+                        progressNotify("Обнаружена ошибка - лог-файл обновлен");
                         continue;
                     }
                     else
@@ -108,31 +131,19 @@ namespace UpdateBazeKMZ
                                            int.Parse(currentLine.Substring(95, 1)),
                                            currentLine.Substring(96, 25).Trim()
                                            );
+
+                        
                     }
+                    if (currentLineNumber % (linesCount/100) == 0) // обновление загрузки процесса каждые N операций
+                        progressChanged(new LoadProgressArgs(currentLineNumber, linesCount)); // текущее состояние загрузки
+
+                    currentLineNumber++;
                 }
             }
-
+            progressNotify("Формирование завершено загрузка в БД");
             cHandle.InsertBulkQuery(dataTable, "TBM104"); // Запись в базу
-
+            progressCompleted();
         }
 
-
-        internal class ReadFileErrorException : Exception
-        {
-            public ReadFileErrorException() { }
-            public ReadFileErrorException(string message) : base(message) { }
-        }
-
-        internal class WrongFileGivenException : Exception
-        {
-            public WrongFileGivenException() { }
-            public WrongFileGivenException(string message) : base(message) { }
-        }
-
-        internal class WriteToDBErrorException : Exception
-        {
-            public WriteToDBErrorException() { }
-            public WriteToDBErrorException(string message) : base(message) { }
-        }
     }
 }

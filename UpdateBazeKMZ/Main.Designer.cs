@@ -36,7 +36,7 @@
             this.tsProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.gbImportInfo = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.M104Load_Click = new System.Windows.Forms.Button();
             this.cmdOSTM = new System.Windows.Forms.Button();
             this.cmdPer300 = new System.Windows.Forms.Button();
             this.cmdLoadRoutes = new System.Windows.Forms.Button();
@@ -100,7 +100,7 @@
             // 
             // gbImportInfo
             // 
-            this.gbImportInfo.Controls.Add(this.button1);
+            this.gbImportInfo.Controls.Add(this.M104Load_Click);
             this.gbImportInfo.Controls.Add(this.cmdOSTM);
             this.gbImportInfo.Controls.Add(this.cmdPer300);
             this.gbImportInfo.Controls.Add(this.cmdLoadRoutes);
@@ -118,15 +118,15 @@
             this.gbImportInfo.TabStop = false;
             this.gbImportInfo.Text = "Комманды корректировки";
             // 
-            // button1
+            // M104Load_Click
             // 
-            this.button1.Location = new System.Drawing.Point(257, 121);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(295, 39);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Загрузка файла M104";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.M104Load_Click.Location = new System.Drawing.Point(257, 121);
+            this.M104Load_Click.Name = "M104Load_Click";
+            this.M104Load_Click.Size = new System.Drawing.Size(295, 39);
+            this.M104Load_Click.TabIndex = 9;
+            this.M104Load_Click.Text = "Загрузка файла M104";
+            this.M104Load_Click.UseVisualStyleBackColor = true;
+            this.M104Load_Click.Click += new System.EventHandler(this.button1_Click);
             // 
             // cmdOSTM
             // 
@@ -277,7 +277,7 @@
         private System.Windows.Forms.Button cmdOSTM;
         private dsBaseKMZTableAdapters.TbCodeProductsTableAdapter tbCodeProductsTableAdapter;
         public System.Windows.Forms.ToolStripProgressBar tsProgressBar;
-        public System.Windows.Forms.Button button1;
+        public System.Windows.Forms.Button M104Load_Click;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
