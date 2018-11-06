@@ -21,7 +21,7 @@ namespace UpdateBazeKMZ
     {
         public string Production;
         public string Assemblyes;
-        public string Detail;
+        public int DetailID;
         public float CountAssembly;
         public float CountProductions;
         public int TypeDetais;
@@ -66,7 +66,7 @@ namespace UpdateBazeKMZ
 
             dt.Columns.Add("Production", typeof(string));
             dt.Columns.Add("Assemblyes", typeof(string));
-            dt.Columns.Add("DetailID", typeof(string));
+            dt.Columns.Add("DetailID", typeof(int));
             dt.Columns.Add("CountAssembly", typeof(float));
             dt.Columns.Add("CountProductions", typeof(float));
             dt.Columns.Add("TypeDetais", typeof(int));
@@ -93,9 +93,8 @@ namespace UpdateBazeKMZ
                 FileM104Data data = new FileM104Data();
                 try
                 {
-
-                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = {0} ",
-                      FileD[i].Substring(50, 25).Trim()));
+                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{0}'", 
+                        FileD[i].Substring(50, 25).Trim()));
 
                     if (DetailID == "0")
                     {
@@ -106,7 +105,7 @@ namespace UpdateBazeKMZ
                     {
                         dataTable.Rows.Add(FileD[i].Substring(136, 10).Trim(),
                                            FileD[i].Substring(25, 25).Trim(),
-                                           DetailID,
+                                           int.Parse(DetailID),
                                            float.Parse(FileD[i].Substring(75, 9).Trim().Replace('.', ',')),
                                            float.Parse(FileD[i].Substring(84, 9).Trim().Replace('.', ',')),
                                            int.Parse(FileD[i].Substring(93, 1)),
@@ -119,7 +118,7 @@ namespace UpdateBazeKMZ
                 }
                 catch (Exception e)
                 {
-                    throw new ReadFileErrorException(string.Format("Ошибка чтения файла ReadFile(M104Process.cs) Итерация {0}", i));
+                    throw new ReadFileErrorException(string.Format("Ошибка чтения файла ReadFile(M104Process.cs) Итерация {0} Сообщение:{1}", i, e.Message));
                 }
             }
 
@@ -145,7 +144,7 @@ namespace UpdateBazeKMZ
                 {
                     var query = string.Format("INSERT INTO TBM104 (Production, Assemblyes, CodeDetailsID, CountAssembly, CountProductions, TypeDetais, TypeAssembly, Sign, PrimaryApplicability)" +
                         " VALUES ('{0}','{1}',(SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{2}'),CAST('{3}' as float) ,CAST('{4}' as float),'{5}','{6}','{7}','{8}')",
-                        Data[i].Production, Data[i].Assemblyes, Data[i].Detail, Data[i].CountAssembly.ToString().Replace(',', '.'),
+                        Data[i].Production, Data[i].Assemblyes, Data[i].DetailID, Data[i].CountAssembly.ToString().Replace(',', '.'),
                         Data[i].CountProductions.ToString().Replace(',', '.'), Data[i].TypeDetais, Data[i].TypeAssembly, Data[i].Sign,
                         Data[i].PrimaryApplicability);
                     queries.Add(query);

@@ -1020,11 +1020,11 @@ namespace UpdateBazeKMZ
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            Log.Init(string.Format("{0}\\Logs\\UpdateBazeKMZ_LOG{1}.txt",Directory.GetCurrentDirectory(),DateTime.Now.Date));
+            new DBConnection().EstablishConnection();
+            Log.Init(string.Format("{0}\\Logs\\UpdateBazeKMZ_LOG{1}.txt",Directory.GetCurrentDirectory(),DateTime.Now.ToShortDateString()));
             File_M104 file = new File_M104();
             file.ReadFile(@"\\192.168.16.50\bazaotd\M104.TXT");
-            file.WriteToDB();
+            //file.WriteToDB();
 
         }
 
