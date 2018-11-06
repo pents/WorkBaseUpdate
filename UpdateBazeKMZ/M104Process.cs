@@ -122,51 +122,10 @@ namespace UpdateBazeKMZ
                 }
             }
 
-            cHandle.InsertBulkQuery(dataTable, "TBM104");
+            cHandle.InsertBulkQuery(dataTable, "TBM104"); // Запись в базу
+
         }
 
-
-        /// <summary>
-        /// Запись в базу данных файла из памяти
-        /// </summary>
-        public void WriteToDB()
-        {
-            try
-            {
-                    DBConnection dbConnect = new DBConnection();
-                    dbConnect.EstablishConnection();
-
-                List<string> queries = new List<string>();
-
-                queries.Add("DELETE FROM TBM104");
-
-                for (int i = 0; i < Data.Count; ++i)
-                {
-                    var query = string.Format("INSERT INTO TBM104 (Production, Assemblyes, CodeDetailsID, CountAssembly, CountProductions, TypeDetais, TypeAssembly, Sign, PrimaryApplicability)" +
-                        " VALUES ('{0}','{1}',(SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{2}'),CAST('{3}' as float) ,CAST('{4}' as float),'{5}','{6}','{7}','{8}')",
-                        Data[i].Production, Data[i].Assemblyes, Data[i].DetailID, Data[i].CountAssembly.ToString().Replace(',', '.'),
-                        Data[i].CountProductions.ToString().Replace(',', '.'), Data[i].TypeDetais, Data[i].TypeAssembly, Data[i].Sign,
-                        Data[i].PrimaryApplicability);
-                    queries.Add(query);
-
-                }
-
-                ConnectionHandler.GetInstance().ExecuteQuery(queries);
-            }
-            catch (DataBaseConnectionErrorException e)
-            {
-                throw new WriteToDBErrorException(string.Format("Ошибка записи в БД - нет подключения, {0}", e.Message));
-            }
-            catch (QueryErrorException e)
-            {
-                throw new WriteToDBErrorException(string.Format("Ошибка записи в БД {0}", e.Message));
-            }
-            catch (Exception e)
-            {
-                throw new WriteToDBErrorException(string.Format("Ошибка записи в БД {0}", e.Message));
-            }
-        }
-    }
 
     internal class ReadFileErrorException : Exception
     {
