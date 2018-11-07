@@ -10,12 +10,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using ProcessLog;
 using System.IO;
+using DBConnectionLib;
 
 namespace UpdateBazeKMZ
 {
     //Перечисления
     public enum ActionType { Load, Sync }; //Перечисление видов операций
-    public enum FilesNames { M101, Gp, CSMR, M106, PTN, NRM, Routes, Per300, OSTM, M104 }     //Перечисления названий файлов
+    public enum FilesNames { M101, Gp, CSMR, M106, PTN, NRM, Routes, Per300, OSTM }     //Перечисления названий файлов
 
     public partial class FrmMain : Form
     {
@@ -91,7 +92,11 @@ namespace UpdateBazeKMZ
 
             timer.Start(); //Запустить таймер
 
-            new DBConnection().EstablishConnection();
+
+
+            // Initialization of database connection
+            DBConnectionSettings dbSettings = new DBConnectionSettings("10.255.7.203", "SGT_MMC", "UsersSGT", "123QWEasd", false);
+            // Initialization of log file
             Log.Init(string.Format("{0}\\Logs\\UpdateBazeKMZ_LOG{1}.txt", Directory.GetCurrentDirectory(), DateTime.Now.ToShortDateString()));
         }
 
@@ -1038,7 +1043,7 @@ namespace UpdateBazeKMZ
         private void exec_M104Load(object state)
         {
            
-            File_M104 file = new File_M104();
+            File_M104 file = new File_M104(ConnectionHandler.GetInstance());
 
             file.progressNotify += File_progressNotify;
             file.progressChanged += File_progressChanged;

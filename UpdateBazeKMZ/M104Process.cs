@@ -34,26 +34,7 @@ namespace UpdateBazeKMZ
             message = Msg;
         }
 
-        public LoadProgressArgs(int Current, int Full) : this(Current, Full, "")
-        {
-        }
-    }
-
-    public class DBConnection
-    {
-        public DBConnection() { }
-        public void EstablishConnection ()
-        {
-            SqlConnectionStringBuilder conStr = new SqlConnectionStringBuilder();
-
-            conStr.DataSource = "10.255.7.203";
-            conStr.InitialCatalog = "SGT_MMC";
-            conStr.UserID = "UsersSGT";
-            conStr.Password = "123QWEasd";
-            conStr.PersistSecurityInfo = true;
-
-            ConnectionHandler.conStr = conStr;
-        }
+        public LoadProgressArgs(int Current, int Full) : this(Current, Full, "") { }
 
     }
 
@@ -64,9 +45,12 @@ namespace UpdateBazeKMZ
         public event ProgressChanged progressChanged;
         public event ProgressNotify progressNotify;
         public event ProgressCompleted progressCompleted;
+        private ConnectionHandler cHandle;
 
-        public File_M104()
+
+        public File_M104(ConnectionHandler connectionHandler)
         {
+            cHandle = connectionHandler;
         }
 
         private DataTable getTable()
@@ -99,7 +83,6 @@ namespace UpdateBazeKMZ
 
         public void ReadFile(string filePath)
         {
-            ConnectionHandler cHandle = ConnectionHandler.GetInstance();
             cHandle.ExecuteQuery("DELETE FROM TBM104");
 
             int linesCount = totalLines(filePath);
