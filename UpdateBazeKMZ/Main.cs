@@ -90,6 +90,9 @@ namespace UpdateBazeKMZ
             FillDictionary(); //Вызов метода заполения справочников
 
             timer.Start(); //Запустить таймер
+
+            new DBConnection().EstablishConnection();
+            Log.Init(string.Format("{0}\\Logs\\UpdateBazeKMZ_LOG{1}.txt", Directory.GetCurrentDirectory(), DateTime.Now.ToShortDateString()));
         }
 
         #endregion
@@ -1020,8 +1023,7 @@ namespace UpdateBazeKMZ
 
         private void button1_Click(object sender, EventArgs e)
         {
-            new DBConnection().EstablishConnection();
-            Log.Init(string.Format("{0}\\Logs\\UpdateBazeKMZ_LOG{1}.txt",Directory.GetCurrentDirectory(),DateTime.Now.ToShortDateString()));
+
 
             tsProgressBar.Visible = true;
             tsProgressBar.ProgressBar.Visible = true;
@@ -1035,37 +1037,41 @@ namespace UpdateBazeKMZ
 
         private void exec_M104Load(object state)
         {
-            DateTime startingTime = DateTime.Now;
+           
             File_M104 file = new File_M104();
 
-            file.progressNotify += (string Msg) =>
-            {
-                Invoke((MethodInvoker)delegate
-                {
-                    toolStripStatusLabel1.Text = Msg;
-                });
-            };
-
-            file.progressChanged += (LoadProgressArgs args) => 
-            {
-                Invoke((MethodInvoker)delegate
-                {
-                    tsProgressBar.Maximum = args.fullProgress;
-                    tsProgressBar.Value = args.currentProgress;
-                    tsLabInfo.Text = string.Format("{0}/{1}", args.currentProgress, args.fullProgress);
-                    toolStripStatusLabel1.Text = string.Format("{0}%   {1}", args.percentage, args.message);
-                });
-            };
-
-            file.progressCompleted += () =>
-            {
-                MessageBox.Show(string.Format("Загрузка завершена за {0}", DateTime.Now - startingTime));
-                tsProgressBar.Visible = false;
-                tsProgressBar.ProgressBar.Visible = false;
-                tsLabInfo.Visible = false;
-            };
+            file.progressNotify += File_progressNotify;
+            file.progressChanged += File_progressChanged;
+            file.progressCompleted += File_progressCompleted;
 
             file.ReadFile(@"\\192.168.16.50\bazaotd\M104.TXT");
+        }
+
+        private void File_progressNotify(string Msg)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                toolStripStatusLabel1.Text = Msg;
+            });
+        }
+
+        private void File_progressChanged(LoadProgressArgs args)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                tsProgressBar.Maximum = args.fullProgress;
+                tsProgressBar.Value = args.currentProgress;
+                tsLabInfo.Text = string.Format("{0}/{1}", args.currentProgress, args.fullProgress);
+                toolStripStatusLabel1.Text = string.Format("{0}%   {1}", args.percentage, args.message);
+            });
+        }
+
+        private void File_progressCompleted()
+        {
+            MessageBox.Show("Загрузка завершена за {0}");
+            tsProgressBar.Visible = false;
+            tsProgressBar.ProgressBar.Visible = false;
+            tsLabInfo.Visible = false;
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
