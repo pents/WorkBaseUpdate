@@ -1033,7 +1033,7 @@ namespace UpdateBazeKMZ
             tsProgressBar.Visible = true;
             tsProgressBar.ProgressBar.Visible = true;
             tsLabInfo.Visible = true;
-
+            M104Load_Click.Enabled = false;
             ThreadPool.QueueUserWorkItem(exec_M104Load);
 
 
