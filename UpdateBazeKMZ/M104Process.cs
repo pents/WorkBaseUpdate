@@ -45,13 +45,11 @@ namespace UpdateBazeKMZ
         public event ProgressChanged progressChanged;
         public event ProgressNotify progressNotify;
         public event ProgressCompleted progressCompleted;
-        private ConnectionHandler cHandle;
 
+        private ConnectionHandler cHandle = ConnectionHandler.GetInstance();
+        private Queue<DataTable> _dataPool = new Queue<DataTable>();
+        private bool _inProgress = false;
 
-        public File_M104(ConnectionHandler connectionHandler)
-        {
-            cHandle = connectionHandler;
-        }
 
         private DataTable getTable()
         {
@@ -84,49 +82,68 @@ namespace UpdateBazeKMZ
         public void ReadFile(string filePath)
         {
             cHandle.ExecuteQuery("DELETE FROM TBM104");
-
+            _inProgress = true;
             int linesCount = totalLines(filePath);
             int currentLineNumber = 1;
 
-            DataTable dataTable = getTable(); // создание таблицы
+            DataTable dataTable = getTable(); // создание таблицы для ввода данных
+
+            ThreadPool.QueueUserWorkItem(poolWriter); // запуск потока записи данных
+
             using (StreamReader fileStream = new StreamReader(filePath, Encoding.Default))
             {
                 string currentLine = "";
-                while((currentLine = fileStream.ReadLine()).Length > 5)
+                while ((currentLine = fileStream.ReadLine()).Length > 5)
                 {
                     string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{0}'",
                     currentLine.Substring(50, 25).Trim()));
 
                     if (DetailID == "0")
                     {
-                        Log.Add(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
-                        progressNotify("Обнаружена ошибка - лог-файл обновлен");
+                        progressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
                         continue;
                     }
                     else
                     {
                         dataTable.Rows.Add(currentLine.Substring(136, 10).Trim(),
-                                           currentLine.Substring(25, 25).Trim(),
-                                           int.Parse(DetailID),
-                                           float.Parse(currentLine.Substring(75, 9).Trim().Replace('.', ',')),
-                                           float.Parse(currentLine.Substring(84, 9).Trim().Replace('.', ',')),
-                                           int.Parse(currentLine.Substring(93, 1)),
-                                           int.Parse(currentLine.Substring(94, 1)),
-                                           int.Parse(currentLine.Substring(95, 1)),
-                                           currentLine.Substring(96, 25).Trim()
-                                           );
+                                            currentLine.Substring(25, 25).Trim(),
+                                            int.Parse(DetailID),
+                                            float.Parse(currentLine.Substring(75, 9).Trim().Replace('.', ',')),
+                                            float.Parse(currentLine.Substring(84, 9).Trim().Replace('.', ',')),
+                                            int.Parse(currentLine.Substring(93, 1)),
+                                            int.Parse(currentLine.Substring(94, 1)),
+                                            int.Parse(currentLine.Substring(95, 1)),
+                                            currentLine.Substring(96, 25).Trim()
+                                            );
 
-                        
+
                     }
-                    if (currentLineNumber % (linesCount/100) == 0) // обновление загрузки процесса каждые N операций
-                        progressChanged(new LoadProgressArgs(currentLineNumber, linesCount)); // текущее состояние загрузки
-
+                    if ((currentLineNumber % 150000 == 0) || (currentLineNumber == linesCount-1))
+                    {
+                        _dataPool.Enqueue(dataTable.Copy()); // очистка таблицы для ввода новых данных
+                        dataTable.Clear();
+                    }
+                    if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount-1))
+                    {
+                        progressChanged(new LoadProgressArgs(currentLineNumber, linesCount-1)); // текущее состояние загрузки
+                    }
+                        
                     currentLineNumber++;
                 }
             }
-            progressNotify("Формирование завершено загрузка в БД");
-            cHandle.InsertBulkQuery(dataTable, "TBM104"); // Запись в базу
+            _inProgress = false;
             progressCompleted();
+        }
+
+        private void poolWriter(object state)
+        {
+            while(_inProgress || _dataPool.Count != 0)
+            {
+                if (_dataPool.Count != 0)
+                {
+                    cHandle.InsertBulkQuery(_dataPool.Dequeue(), "TBM104");
+                }
+            }
         }
 
     }

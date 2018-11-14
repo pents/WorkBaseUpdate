@@ -1034,7 +1034,6 @@ namespace UpdateBazeKMZ
             tsProgressBar.ProgressBar.Visible = true;
             tsLabInfo.Visible = true;
 
-            
             ThreadPool.QueueUserWorkItem(exec_M104Load);
 
 
@@ -1043,12 +1042,12 @@ namespace UpdateBazeKMZ
         private void exec_M104Load(object state)
         {
            
-            File_M104 file = new File_M104(ConnectionHandler.GetInstance());
+            File_M104 file = new File_M104();
 
             file.progressNotify += File_progressNotify;
             file.progressChanged += File_progressChanged;
             file.progressCompleted += File_progressCompleted;
-
+            Log.Add("Начало загрузки");
             file.ReadFile(@"\\192.168.16.50\bazaotd\M104.TXT");
         }
 
@@ -1057,6 +1056,7 @@ namespace UpdateBazeKMZ
             Invoke((MethodInvoker)delegate
             {
                 toolStripStatusLabel1.Text = Msg;
+                Log.Add(Msg);
             });
         }
 
@@ -1073,10 +1073,15 @@ namespace UpdateBazeKMZ
 
         private void File_progressCompleted()
         {
-            MessageBox.Show("Загрузка завершена за {0}");
-            tsProgressBar.Visible = false;
-            tsProgressBar.ProgressBar.Visible = false;
-            tsLabInfo.Visible = false;
+            MessageBox.Show("Загрузка завершена");
+            Invoke((MethodInvoker)delegate
+            {
+                tsProgressBar.Visible = false;
+                tsProgressBar.ProgressBar.Visible = false;
+                tsLabInfo.Visible = false;
+                toolStripStatusLabel1.Text = "";
+                Log.Add("Загрузка завершена");
+            });
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)

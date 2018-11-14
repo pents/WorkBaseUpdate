@@ -24,9 +24,11 @@ namespace UpdateBazeKMZ
             UserID = userID;
             Password = passWord;
             PersistSecurityInfo = SecInfo;
+
+            EstablishConnection();
         }
 
-        public void EstablishConnection()
+        private void EstablishConnection()
         {
             SqlConnectionStringBuilder conStr = new SqlConnectionStringBuilder();
 
