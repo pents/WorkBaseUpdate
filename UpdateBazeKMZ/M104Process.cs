@@ -101,6 +101,7 @@ namespace UpdateBazeKMZ
                     if (DetailID == "0")
                     {
                         progressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
+                        currentLineNumber++;
                         continue;
                     }
                     else
