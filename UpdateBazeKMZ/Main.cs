@@ -852,13 +852,20 @@ namespace UpdateBazeKMZ
                             if (bgWorker.CancellationPending)
                                 return;
 
-                            detailFromFile = e.DetailList.Where(p => p.Trim() == item["PartNumber"].ToString().Trim()).Select(p => p).ToArray(); //Поиск в списке деталей из файла
+                            detailFromFile = e.DetailList.Where(
+                                p => 
+                                p.Trim() == item["PartNumber"].ToString().Trim()).
+                                Select(p => p).ToArray(); 
+                            //Поиск в списке деталей из файла
 
                             if (detailFromFile.Length == 0) //Если в файле такой детали нет
                             {
                                 //Пометить деталь как неиспользуемую
-                                tbCodeProductsTableAdapter.UpdateQuery(item["PartNumber"].ToString().Trim(), item["PartNumber"].ToString().ToString().Trim(),
-                                    item["Name"].ToString().Trim(), false);
+                                tbCodeProductsTableAdapter.UpdateQuery(
+                                    item["PartNumber"].ToString().Trim(), 
+                                    item["PartNumber"].ToString().ToString().Trim(),
+                                    item["Name"].ToString().Trim(), 
+                                    false);
                             }
 
                             e.NCount++;

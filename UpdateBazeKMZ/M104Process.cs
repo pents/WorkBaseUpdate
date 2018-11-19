@@ -18,26 +18,6 @@ namespace UpdateBazeKMZ
     public delegate void ProgressNotify(string Msg);
     public delegate void ProgressCompleted();
 
-    public struct LoadProgressArgs
-    {
-        public int currentProgress;
-        public int fullProgress;
-        public byte percentage;
-        public string message;
-
-        public LoadProgressArgs(int Current, int Full, string Msg)
-        {
-
-            currentProgress = Current;
-            fullProgress = Full;
-            percentage = (byte)(((float)currentProgress / (float)fullProgress) * 100);
-            message = Msg;
-        }
-
-        public LoadProgressArgs(int Current, int Full) : this(Current, Full, "") { }
-
-    }
-
 
     public class File_M104
     {
