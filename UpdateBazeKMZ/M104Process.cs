@@ -14,12 +14,8 @@ using System.IO;
 
 namespace UpdateBazeKMZ
 {
-    public delegate void ProgressChanged(LoadProgressArgs args);
-    public delegate void ProgressNotify(string Msg);
-    public delegate void ProgressCompleted();
 
-
-    public class File_M104
+    public class File_M104 : FileProcces
     {
         
         public event ProgressChanged progressChanged;
@@ -59,7 +55,7 @@ namespace UpdateBazeKMZ
             }
         }
 
-        public void ReadFile(string filePath)
+        public override void ReadFile(string filePath)
         {
             cHandle.ExecuteQuery("DELETE FROM TBM104");
             _inProgress = true;
@@ -99,6 +95,7 @@ namespace UpdateBazeKMZ
 
 
                     }
+                    // берем по 150к строк
                     if ((currentLineNumber % 150000 == 0) || (currentLineNumber == linesCount-1))
                     {
                         _dataPool.Enqueue(dataTable.Copy()); // очистка таблицы для ввода новых данных
