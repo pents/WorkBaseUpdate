@@ -1,7 +1,4 @@
-﻿using DBConnectionLib;
-using FileHandler;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -22,7 +19,7 @@ namespace UpdateBazeKMZ
         public event ProgressNotify progressNotify;
         public event ProgressCompleted progressCompleted;
 
-        private ConnectionHandler cHandle = ConnectionHandler.GetInstance();
+        //private ConnectionHandler cHandle = ConnectionHandler.GetInstance();
         private Queue<DataTable> _dataPool = new Queue<DataTable>();
         private bool _inProgress = false;
 
@@ -42,17 +39,6 @@ namespace UpdateBazeKMZ
             dt.Columns.Add("PrimaryApplicability", typeof(string));
 
             return dt;
-        }
-
-        private int totalLines(string filePath)
-        {
-            using (StreamReader sr = new StreamReader(filePath))
-            {
-                int i = 0;
-                while (sr.ReadLine() != null) { ++i; }
-
-                return i;
-            }
         }
 
         public override void ReadFile(string filePath)

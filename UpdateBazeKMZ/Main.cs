@@ -1054,8 +1054,20 @@ namespace UpdateBazeKMZ
             file.progressNotify += File_progressNotify;
             file.progressChanged += File_progressChanged;
             file.progressCompleted += File_progressCompleted;
-            Log.Add("Начало загрузки");
+            Log.Add("Начало загрузки M104.txt");
             file.ReadFile(@"\\192.168.16.50\bazaotd\M104.TXT");
+        }
+
+        private void exec_PER300Load(object state)
+        {
+
+            File_PER300 file = new File_PER300();
+
+            file.progressNotify += File_progressNotify;
+            file.progressChanged += File_progressChanged;
+            file.progressCompleted += File_progressCompleted;
+            Log.Add("Начало загрузки PER300.txt");
+            file.ReadFile(@"\\192.168.16.50\BazaOtd\PER300.txt");
         }
 
         private void File_progressNotify(string Msg)

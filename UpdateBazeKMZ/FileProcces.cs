@@ -5,18 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using DBConnectionLib;
 using System.IO;
+using System.Data;
 
 namespace UpdateBazeKMZ
 {
+
     public abstract class FileProcces
     {
         public delegate void ProgressChanged(LoadProgressArgs args);
         public delegate void ProgressNotify(string Msg);
         public delegate void ProgressCompleted();
 
-        private ConnectionHandler cHandle = ConnectionHandler.GetInstance();
+        protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
 
-        private int totalLines(string filePath)
+
+        protected int totalLines(string filePath)
         {
             using (StreamReader sr = new StreamReader(filePath))
             {
