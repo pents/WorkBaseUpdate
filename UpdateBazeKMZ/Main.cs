@@ -1035,47 +1035,38 @@ namespace UpdateBazeKMZ
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-
-            tsProgressBar.Visible = true;
-            tsProgressBar.ProgressBar.Visible = true;
-            tsLabInfo.Visible = true;
-            M104Load_Click.Enabled = false;
-            ThreadPool.QueueUserWorkItem(exec_M104Load);
-
-
+            (sender as Button).Enabled = false;
+            ThreadPool.QueueUserWorkItem(
+            new WaitCallback(delegate(object state) 
+            {
+                exec_FileLoad(new File_M104(@"\\192.168.16.50\bazaotd\M104.TXT")); // @"\\192.168.16.50\BazaOtd\PER300.txt"
+            }), 
+            null);
         }
+        // Only need to call threadPool.QueueUserWorkItem or any other async starting operation with this
 
-        private void exec_M104Load(object state)
-        {
-           
-            File_M104 file = new File_M104();
 
-            file.progressNotify += File_progressNotify;
-            file.progressChanged += File_progressChanged;
-            file.progressCompleted += File_progressCompleted;
-            Log.Add("Начало загрузки M104.txt");
-            file.ReadFile(@"\\192.168.16.50\bazaotd\M104.TXT");
-        }
-
-        private void exec_PER300Load(object state)
-        {
-
-            File_PER300 file = new File_PER300();
-
-            file.progressNotify += File_progressNotify;
-            file.progressChanged += File_progressChanged;
-            file.progressCompleted += File_progressCompleted;
-            Log.Add("Начало загрузки PER300.txt");
-            file.ReadFile(@"\\192.168.16.50\BazaOtd\PER300.txt");
-        }
-
-        private void File_progressNotify(string Msg)
+        private void exec_FileLoad(FileProcces file)
         {
             Invoke((MethodInvoker)delegate
             {
-                toolStripStatusLabel1.Text = Msg;
-                Log.Add(Msg);
+                tsProgressBar.Visible = true;
+                tsProgressBar.ProgressBar.Visible = true;
+                tsLabInfo.Visible = true;
+            });
+            file.progressNotify += File_progressNotify;
+            file.progressChanged += File_progressChanged;
+            file.progressCompleted += File_progressCompleted;
+            Log.Add(string.Format("Начало загрузки {0}", file.FileName));
+            file.ReadFile();
+        }
+
+        private void File_progressNotify(LoadProgressArgs args)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                toolStripStatusLabel1.Text = args.message;
+                Log.Add(args.message);
             });
         }
 
@@ -1090,7 +1081,7 @@ namespace UpdateBazeKMZ
             });
         }
 
-        private void File_progressCompleted()
+        private void File_progressCompleted(LoadProgressArgs args)
         {
             MessageBox.Show("Загрузка завершена");
             Invoke((MethodInvoker)delegate

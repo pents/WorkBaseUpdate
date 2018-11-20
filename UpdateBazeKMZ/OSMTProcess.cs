@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DBConnectionLib;
-using System.IO;
-using System.Data;
 
 namespace UpdateBazeKMZ
 {
-    
-    public class File_PER300 : FileProcces
+    public class File_OSMT : FileProcces
     {
-        public File_PER300 (string filePath) : base()
+        public File_OSMT(string filePath) : base()
         {
             FilePath = filePath;
         }
@@ -21,17 +19,18 @@ namespace UpdateBazeKMZ
         {
             DataTable dt = new DataTable();
 
+            dt.Columns.Add("Dep", typeof(string));
+            dt.Columns.Add("MOL", typeof(string));
             dt.Columns.Add("MaterialID", typeof(string));
-            dt.Columns.Add("Storage", typeof(string));
-            dt.Columns.Add("BalanceDay", typeof(float));
-            dt.Columns.Add("BalanceMonth", typeof(float));
+            dt.Columns.Add("CountMaterial", typeof(float));
+
             return dt;
         }
 
         public override void ReadFile()
         {
             DataTable dataTable = getTable();
-            cHandle.ExecuteQuery("DELETE FROM TBStorageBalance");
+            cHandle.ExecuteQuery("DELETE FROM TBBalanceDep");
             int linesCount = totalLines(FilePath);
             int currentLineNumber = 0;
             using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
@@ -40,8 +39,8 @@ namespace UpdateBazeKMZ
                 while ((currentLine = fileStream.ReadLine()).Length > 5)
                 {
                     dataTable.Rows.Add(
-                        currentLine.Substring(3,12), currentLine.Substring(0,3), 
-                        currentLine.Substring(15,11), currentLine.Substring(26,11)
+                        currentLine.Substring(0, 3), currentLine.Substring(3, 2),
+                        currentLine.Substring(5, 12), currentLine.Substring(113, 12)
                         );
 
                     if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
@@ -52,7 +51,7 @@ namespace UpdateBazeKMZ
                 }
             }
 
-            cHandle.InsertBulkQuery(dataTable, "TBStorageBalance");
+            cHandle.InsertBulkQuery(dataTable, "TBBalanceDep");
             OnProgressCompleted();
         }
     }

@@ -12,12 +12,41 @@ namespace UpdateBazeKMZ
 
     public abstract class FileProcces
     {
-        public delegate void ProgressChanged(LoadProgressArgs args);
-        public delegate void ProgressNotify(string Msg);
-        public delegate void ProgressCompleted();
+        public delegate void ProgressEvent(LoadProgressArgs args);
+        public string FilePath { get; protected set; } 
+        public string FileName { get; private set; }
+
+        public event ProgressEvent progressChanged;
+        public event ProgressEvent progressNotify;
+        public event ProgressEvent progressCompleted;
 
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
 
+        protected FileProcces()
+        {
+            for (int i = FilePath.Length-1; FilePath[i] != '\\'; --i)
+            {
+                FileName += FilePath[i];
+            }
+        }
+        
+        protected void OnProgressChanged(LoadProgressArgs args)
+        {
+            // NOTE: below is the same as progressChanged(args) -- it's just a compiler sortage 
+            progressChanged?.Invoke(args);
+        }
+
+        protected void OnProgressNotify(string message)
+        {
+            LoadProgressArgs args = new LoadProgressArgs(0,0,message);
+
+            progressNotify?.Invoke(args);
+        }
+
+        protected void OnProgressCompleted()
+        {
+            progressCompleted?.Invoke(new LoadProgressArgs(0,0));
+        }
 
         protected int totalLines(string filePath)
         {
@@ -30,8 +59,7 @@ namespace UpdateBazeKMZ
             }
         }
 
-
-        public abstract void ReadFile(string filePath);
+        public abstract void ReadFile();
 
     }
 }

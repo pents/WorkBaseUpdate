@@ -14,10 +14,10 @@ namespace UpdateBazeKMZ
 
     public class File_M104 : FileProcces
     {
-        
-        public event ProgressChanged progressChanged;
-        public event ProgressNotify progressNotify;
-        public event ProgressCompleted progressCompleted;
+        public File_M104(string filePath) : base()
+        {
+            FilePath = filePath;
+        }
 
         //private ConnectionHandler cHandle = ConnectionHandler.GetInstance();
         private Queue<DataTable> _dataPool = new Queue<DataTable>();
@@ -41,18 +41,18 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
-        public override void ReadFile(string filePath)
+        public override void ReadFile()
         {
             cHandle.ExecuteQuery("DELETE FROM TBM104");
             _inProgress = true;
-            int linesCount = totalLines(filePath);
+            int linesCount = totalLines(FilePath);
             int currentLineNumber = 1;
 
             DataTable dataTable = getTable(); // создание таблицы для ввода данных
 
             ThreadPool.QueueUserWorkItem(poolWriter); // запуск потока записи данных
 
-            using (StreamReader fileStream = new StreamReader(filePath, Encoding.Default))
+            using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
             {
                 string currentLine = "";
                 while ((currentLine = fileStream.ReadLine()).Length > 5)
@@ -62,7 +62,7 @@ namespace UpdateBazeKMZ
 
                     if (DetailID == "0")
                     {
-                        progressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
+                        OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
                         currentLineNumber++;
                         continue;
                     }
@@ -89,14 +89,14 @@ namespace UpdateBazeKMZ
                     }
                     if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount-1))
                     {
-                        progressChanged(new LoadProgressArgs(currentLineNumber, linesCount-1)); // текущее состояние загрузки
+                        OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount-1)); // текущее состояние загрузки
                     }
                         
                     currentLineNumber++;
                 }
             }
             _inProgress = false;
-            progressCompleted();
+            OnProgressCompleted();
         }
 
         private void poolWriter(object state)
