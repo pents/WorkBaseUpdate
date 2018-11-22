@@ -36,7 +36,12 @@ namespace UpdateBazeKMZ
                 while ((currentLine = fileStream.ReadLine()).Length > 5)
                 {
                     string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", currentLine.Substring(0, 25)));
-                    if (DetailID == null) continue;
+
+                    if (DetailID == null)
+                    {
+                        OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(0, 25)));
+                        continue;
+                    }
 
                     dataTable.Rows.Add(DetailID, currentLine.Substring(25).Trim());
 
@@ -48,7 +53,7 @@ namespace UpdateBazeKMZ
                 }
             }
 
-            cHandle.InsertBulkQuery(dataTable, "TBBalanceDep");
+            cHandle.InsertBulkQuery(dataTable, "TBRoutes");
             OnProgressCompleted();
         }
     }

@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace UpdateBazeKMZ
@@ -11,6 +12,10 @@ namespace UpdateBazeKMZ
     public class NRMProcess : FileProcces
     {
         public NRMProcess(string filePath) : base(filePath) { }
+
+        private Queue<DataTable> _dataPool = new Queue<DataTable>();
+        private bool _inProgress = false;
+
 
         private DataTable getTable()
         {
@@ -32,10 +37,11 @@ namespace UpdateBazeKMZ
         public override void ReadFile()
         {
             DataTable dataTable = getTable();
-            cHandle.ExecuteQuery("DELETE FROM TBRoutes");
-
+            cHandle.ExecuteQuery("DELETE FROM TBNRM");
+            _inProgress = true;
             int linesCount = totalLines(FilePath);
             int currentLineNumber = 0;
+            ThreadPool.QueueUserWorkItem(poolWriter); // запуск потока записи данных
 
             using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
             {
@@ -57,7 +63,12 @@ namespace UpdateBazeKMZ
                             currentLine.Substring(74, 20).Trim(),     /*Prof*/
                             currentLine.Substring(94, 15).Trim()      /*Route*/
                     );
-
+                    // берем по 70к строк
+                    if ((currentLineNumber % 70000 == 0) || (currentLineNumber == linesCount - 1))
+                    {
+                        _dataPool.Enqueue(dataTable.Copy()); // очистка таблицы для ввода новых данных
+                        dataTable.Clear();
+                    }
 
                     if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
                     {
@@ -67,6 +78,21 @@ namespace UpdateBazeKMZ
 
                 }
             }
+            _inProgress = false;
+            OnProgressCompleted();
         }
+
+        private void poolWriter(object state)
+        {
+            while (_inProgress || _dataPool.Count != 0)
+            {
+                if (_dataPool.Count != 0)
+                {
+                    cHandle.InsertBulkQuery(_dataPool.Dequeue(), "TBNRM");
+                }
+            }
+        }
+
+
     }
 }

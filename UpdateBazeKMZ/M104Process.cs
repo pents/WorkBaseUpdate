@@ -16,7 +16,6 @@ namespace UpdateBazeKMZ
     {
         public File_M104(string filePath) : base(filePath) { }
 
-        //private ConnectionHandler cHandle = ConnectionHandler.GetInstance();
         private Queue<DataTable> _dataPool = new Queue<DataTable>();
         private bool _inProgress = false;
 
