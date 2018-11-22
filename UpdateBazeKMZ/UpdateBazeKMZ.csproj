@@ -80,6 +80,8 @@
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="MARSHProcess.cs" />
+    <Compile Include="NRMProcess.cs" />
     <Compile Include="OSMTProcess.cs" />
     <Compile Include="PER300Procces.cs" />
     <Compile Include="Program.cs" />

@@ -135,6 +135,7 @@
             this.cmdOSTM.Name = "cmdOSTM";
             this.cmdOSTM.Size = new System.Drawing.Size(295, 44);
             this.cmdOSTM.TabIndex = 8;
+            this.cmdOSTM.Tag = "\\\\192.168.16.50\\BazaOtd\\OSTM.txt";
             this.cmdOSTM.Text = "Импорт файла OSTM.txt (Остатки материалов в подразделениях)";
             this.cmdOSTM.UseVisualStyleBackColor = true;
             this.cmdOSTM.Click += new System.EventHandler(this.cmdOSTM_Click);
@@ -145,6 +146,7 @@
             this.cmdPer300.Name = "cmdPer300";
             this.cmdPer300.Size = new System.Drawing.Size(295, 35);
             this.cmdPer300.TabIndex = 7;
+            this.cmdPer300.Tag = "\\\\192.168.16.50\\BazaOtd\\PER300.txt";
             this.cmdPer300.Text = "Остатки материалов на складах (PER300)";
             this.cmdPer300.UseVisualStyleBackColor = true;
             this.cmdPer300.Click += new System.EventHandler(this.cmdPer300_Click);
@@ -155,6 +157,7 @@
             this.cmdLoadRoutes.Name = "cmdLoadRoutes";
             this.cmdLoadRoutes.Size = new System.Drawing.Size(245, 52);
             this.cmdLoadRoutes.TabIndex = 6;
+            this.cmdLoadRoutes.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\MARSH.txt";
             this.cmdLoadRoutes.Text = "Импорт файла MARSH (Маршруты деталей)";
             this.cmdLoadRoutes.UseVisualStyleBackColor = true;
             this.cmdLoadRoutes.Click += new System.EventHandler(this.cmdLoadRoutes_Click);
@@ -165,6 +168,7 @@
             this.cmdLoadNRM.Name = "cmdLoadNRM";
             this.cmdLoadNRM.Size = new System.Drawing.Size(245, 47);
             this.cmdLoadNRM.TabIndex = 5;
+            this.cmdLoadNRM.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\NRM.txt";
             this.cmdLoadNRM.Text = "Импорт файла NRM (Норма расхода материала)";
             this.cmdLoadNRM.UseVisualStyleBackColor = true;
             this.cmdLoadNRM.Click += new System.EventHandler(this.cmdLoadNRM_Click);
@@ -175,6 +179,7 @@
             this.cmdLoadPTN.Name = "cmdLoadPTN";
             this.cmdLoadPTN.Size = new System.Drawing.Size(245, 44);
             this.cmdLoadPTN.TabIndex = 4;
+            this.cmdLoadPTN.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\PTN.txt";
             this.cmdLoadPTN.Text = "Импорт файла ПТН";
             this.cmdLoadPTN.UseVisualStyleBackColor = true;
             this.cmdLoadPTN.Click += new System.EventHandler(this.cmdLoadPTN_Click);
@@ -185,6 +190,7 @@
             this.cmdLoadM106.Name = "cmdLoadM106";
             this.cmdLoadM106.Size = new System.Drawing.Size(245, 40);
             this.cmdLoadM106.TabIndex = 3;
+            this.cmdLoadM106.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\M106.txt";
             this.cmdLoadM106.Text = "Импорт файла М106 (Состав изделий/сборок)";
             this.cmdLoadM106.UseVisualStyleBackColor = true;
             this.cmdLoadM106.Click += new System.EventHandler(this.cmdLoadM106_Click);
@@ -195,6 +201,7 @@
             this.cmdLoadCSMR.Name = "cmdLoadCSMR";
             this.cmdLoadCSMR.Size = new System.Drawing.Size(245, 49);
             this.cmdLoadCSMR.TabIndex = 2;
+            this.cmdLoadCSMR.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\CSMR.txt";
             this.cmdLoadCSMR.Text = "Импотр файла CSMR (Загрузка материалов)";
             this.cmdLoadCSMR.UseVisualStyleBackColor = true;
             this.cmdLoadCSMR.Click += new System.EventHandler(this.cmdLoadCSMR_Click);
@@ -205,6 +212,7 @@
             this.cmdImportM101.Name = "cmdImportM101";
             this.cmdImportM101.Size = new System.Drawing.Size(245, 35);
             this.cmdImportM101.TabIndex = 1;
+            this.cmdImportM101.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\SPRAVN.txt";
             this.cmdImportM101.Text = "Импорт М101 (Шифры изделий)";
             this.cmdImportM101.UseVisualStyleBackColor = true;
             this.cmdImportM101.Click += new System.EventHandler(this.cmdImportM101_Click);
@@ -215,6 +223,7 @@
             this.cmdImportGP.Name = "cmdImportGP";
             this.cmdImportGP.Size = new System.Drawing.Size(245, 33);
             this.cmdImportGP.TabIndex = 0;
+            this.cmdImportGP.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\Gprn.txt";
             this.cmdImportGP.Text = "Импорт файла ГП (Детали)";
             this.cmdImportGP.UseVisualStyleBackColor = true;
             this.cmdImportGP.Click += new System.EventHandler(this.cmdImportGP_Click);

@@ -8,18 +8,17 @@ using System.Threading.Tasks;
 
 namespace UpdateBazeKMZ
 {
-    public class File_OSMT : FileProcces
+    public class File_Marsh : FileProcces
     {
-        public File_OSMT(string filePath) : base(filePath) { }
+        public File_Marsh(string filePath) : base(filePath) { }
+
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("Dep",           typeof(string));
-            dt.Columns.Add("MOL",           typeof(string));
-            dt.Columns.Add("MaterialID",    typeof(string));
-            dt.Columns.Add("CountMaterial", typeof(float));
+            dt.Columns.Add("DetailID", typeof(int));
+            dt.Columns.Add("Route", typeof(string));
 
             return dt;
         }
@@ -27,7 +26,8 @@ namespace UpdateBazeKMZ
         public override void ReadFile()
         {
             DataTable dataTable = getTable();
-            cHandle.ExecuteQuery("DELETE FROM TBBalanceDep");
+            cHandle.ExecuteQuery("DELETE FROM TBRoutes");
+
             int linesCount = totalLines(FilePath);
             int currentLineNumber = 0;
             using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
@@ -35,10 +35,10 @@ namespace UpdateBazeKMZ
                 string currentLine = "";
                 while ((currentLine = fileStream.ReadLine()).Length > 5)
                 {
-                    dataTable.Rows.Add(
-                        currentLine.Substring(0, 3).Trim(), currentLine.Substring(3, 2).Trim(),
-                        currentLine.Substring(5, 12).Trim(), currentLine.Substring(113, 12).Trim()
-                        );
+                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", currentLine.Substring(0, 25)));
+                    if (DetailID == null) continue;
+
+                    dataTable.Rows.Add(DetailID, currentLine.Substring(25).Trim());
 
                     if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
                     {

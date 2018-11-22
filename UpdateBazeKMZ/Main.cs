@@ -740,7 +740,7 @@ namespace UpdateBazeKMZ
                         //}
                         break;
                     }
-                case 5:
+                case 5: // NRM
                     {
                         double nrm = Convert.ToDouble(e.FStr.Substring(40, 12).Trim().Replace('.', ','));
                         double mas = Convert.ToDouble(e.FStr.Substring(58, 9).Trim().Replace('.', ','));

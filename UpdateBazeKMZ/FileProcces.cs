@@ -20,6 +20,7 @@ namespace UpdateBazeKMZ
         public event ProgressEvent progressNotify;
         public event ProgressEvent progressCompleted;
 
+       
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
 
         protected FileProcces(string filePath)
