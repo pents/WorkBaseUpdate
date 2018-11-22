@@ -124,9 +124,10 @@
             this.M104Load_Click.Name = "M104Load_Click";
             this.M104Load_Click.Size = new System.Drawing.Size(295, 39);
             this.M104Load_Click.TabIndex = 9;
+            this.M104Load_Click.Tag = "\\\\192.168.16.50\\bazaotd\\M104.TXT";
             this.M104Load_Click.Text = "Загрузка файла M104";
             this.M104Load_Click.UseVisualStyleBackColor = true;
-            this.M104Load_Click.Click += new System.EventHandler(this.button1_Click);
+            this.M104Load_Click.Click += new System.EventHandler(this.LoadM104_Click);
             // 
             // cmdOSTM
             // 

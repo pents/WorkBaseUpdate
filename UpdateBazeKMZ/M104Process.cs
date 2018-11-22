@@ -14,10 +14,7 @@ namespace UpdateBazeKMZ
 
     public class File_M104 : FileProcces
     {
-        public File_M104(string filePath) : base()
-        {
-            FilePath = filePath;
-        }
+        public File_M104(string filePath) : base(filePath) { }
 
         //private ConnectionHandler cHandle = ConnectionHandler.GetInstance();
         private Queue<DataTable> _dataPool = new Queue<DataTable>();
@@ -28,14 +25,14 @@ namespace UpdateBazeKMZ
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("Production", typeof(string));
-            dt.Columns.Add("Assemblyes", typeof(string));
-            dt.Columns.Add("DetailID", typeof(int));
-            dt.Columns.Add("CountAssembly", typeof(float));
-            dt.Columns.Add("CountProductions", typeof(float));
-            dt.Columns.Add("TypeDetais", typeof(int));
-            dt.Columns.Add("TypeAssembly", typeof(int));
-            dt.Columns.Add("Sign", typeof(int));
+            dt.Columns.Add("Production",           typeof(string));
+            dt.Columns.Add("Assemblyes",           typeof(string));
+            dt.Columns.Add("DetailID",             typeof(int));
+            dt.Columns.Add("CountAssembly",        typeof(float));
+            dt.Columns.Add("CountProductions",     typeof(float));
+            dt.Columns.Add("TypeDetais",           typeof(int));
+            dt.Columns.Add("TypeAssembly",         typeof(int));
+            dt.Columns.Add("Sign",                 typeof(int));
             dt.Columns.Add("PrimaryApplicability", typeof(string));
 
             return dt;

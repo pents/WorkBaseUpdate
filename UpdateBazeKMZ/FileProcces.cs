@@ -13,7 +13,7 @@ namespace UpdateBazeKMZ
     public abstract class FileProcces
     {
         public delegate void ProgressEvent(LoadProgressArgs args);
-        public string FilePath { get; protected set; } 
+        public string FilePath { get; private set; } 
         public string FileName { get; private set; }
 
         public event ProgressEvent progressChanged;
@@ -22,12 +22,15 @@ namespace UpdateBazeKMZ
 
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
 
-        protected FileProcces()
+        protected FileProcces(string filePath)
         {
+            FilePath = filePath;
+            FileName = "";
             for (int i = FilePath.Length-1; FilePath[i] != '\\'; --i)
             {
                 FileName += FilePath[i];
             }
+            FileName = new string(FileName.Reverse().ToArray());
         }
         
         protected void OnProgressChanged(LoadProgressArgs args)

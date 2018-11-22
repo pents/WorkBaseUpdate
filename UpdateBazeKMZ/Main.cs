@@ -1028,18 +1028,16 @@ namespace UpdateBazeKMZ
                 return false;
             }
         }
-
-
-
         #endregion
 
-        private void button1_Click(object sender, EventArgs e)
+        private void LoadM104_Click(object sender, EventArgs e)
         {
-            (sender as Button).Enabled = false;
+            Button clickedBtn = (Button)sender;
+            clickedBtn.Enabled = false;
             ThreadPool.QueueUserWorkItem(
             new WaitCallback(delegate(object state) 
             {
-                exec_FileLoad(new File_M104(@"\\192.168.16.50\bazaotd\M104.TXT")); // @"\\192.168.16.50\BazaOtd\PER300.txt"
+                exec_FileLoad(new File_M104(clickedBtn.Tag.ToString())); // @"\\192.168.16.50\BazaOtd\PER300.txt"
             }), 
             null);
         }

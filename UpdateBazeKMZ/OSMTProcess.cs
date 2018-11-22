@@ -10,18 +10,15 @@ namespace UpdateBazeKMZ
 {
     public class File_OSMT : FileProcces
     {
-        public File_OSMT(string filePath) : base()
-        {
-            FilePath = filePath;
-        }
+        public File_OSMT(string filePath) : base(filePath) { }
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("Dep", typeof(string));
-            dt.Columns.Add("MOL", typeof(string));
-            dt.Columns.Add("MaterialID", typeof(string));
+            dt.Columns.Add("Dep",           typeof(string));
+            dt.Columns.Add("MOL",           typeof(string));
+            dt.Columns.Add("MaterialID",    typeof(string));
             dt.Columns.Add("CountMaterial", typeof(float));
 
             return dt;

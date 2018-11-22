@@ -12,10 +12,7 @@ namespace UpdateBazeKMZ
     
     public class File_PER300 : FileProcces
     {
-        public File_PER300 (string filePath) : base()
-        {
-            FilePath = filePath;
-        }
+        public File_PER300(string filePath) : base(filePath) { }
 
         private DataTable getTable()
         {
