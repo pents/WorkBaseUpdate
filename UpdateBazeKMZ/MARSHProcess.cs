@@ -37,13 +37,13 @@ namespace UpdateBazeKMZ
                 {
                     string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", currentLine.Substring(0, 25)));
 
-                    if (DetailID == null)
+                    if (DetailID == "0")
                     {
                         OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(0, 25)));
                         continue;
                     }
 
-                    dataTable.Rows.Add(DetailID, currentLine.Substring(25).Trim());
+                    dataTable.Rows.Add(int.Parse(DetailID), currentLine.Substring(25).Trim());
 
                     if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
                     {

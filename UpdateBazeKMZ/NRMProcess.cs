@@ -50,10 +50,10 @@ namespace UpdateBazeKMZ
                     dataTable.Rows.Add(
                             currentLine.Substring(3, 25).Trim(),      /*Detail*/
                             currentLine.Substring(28, 12).Trim(),     /*Material*/
-                            NRM.ToString().Replace(',', '.'),         /*NRM*/
+                            (float)NRM,                               /*NRM*/
                             currentLine.Substring(52, 3).Trim(),      /*EIK*/
                             currentLine.Substring(55, 3).Trim(),      /*EIN*/
-                            Mass.ToString().Replace(',', '.'),        /*Mass*/
+                            (float)Mass,                              /*Mass*/
                             Count,                                    /*Count*/
                             currentLine.Substring(74, 20).Trim(),     /*Prof*/
                             currentLine.Substring(94, 15).Trim()      /*Route*/

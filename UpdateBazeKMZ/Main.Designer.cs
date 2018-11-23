@@ -181,13 +181,15 @@
             // 
             // cmdLoadPTN
             // 
+            this.cmdLoadPTN.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdLoadPTN.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cmdLoadPTN.Location = new System.Drawing.Point(6, 303);
             this.cmdLoadPTN.Name = "cmdLoadPTN";
             this.cmdLoadPTN.Size = new System.Drawing.Size(245, 44);
             this.cmdLoadPTN.TabIndex = 4;
             this.cmdLoadPTN.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\PTN.txt";
             this.cmdLoadPTN.Text = "Импорт файла ПТН";
-            this.cmdLoadPTN.UseVisualStyleBackColor = true;
+            this.cmdLoadPTN.UseVisualStyleBackColor = false;
             this.cmdLoadPTN.Click += new System.EventHandler(this.cmdLoadPTN_Click);
             // 
             // cmdLoadM106
