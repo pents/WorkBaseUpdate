@@ -42,7 +42,6 @@ namespace UpdateBazeKMZ
 
             DataTable dataTable = getTable(); // создание таблицы для ввода данных
 
-            ThreadPool.QueueUserWorkItem(poolWriter); // запуск потока записи данных
 
 
         }

@@ -53,7 +53,7 @@ namespace UpdateBazeKMZ
                 }
             }
 
-            cHandle.InsertBulkQuery(dataTable, "TBRoutes");
+            Write(dataTable, "TBRoutes");
             OnProgressCompleted();
         }
     }

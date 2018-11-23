@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
-using ProcessLog;
 using System.Runtime.Serialization;
-using System.Windows.Forms;
-using System.Threading;
 using System.Data;
 using System.IO;
 
 namespace UpdateBazeKMZ
 {
-
     public class File_M104 : FileProcces
     {
         public File_M104(string filePath) : base(filePath) { }

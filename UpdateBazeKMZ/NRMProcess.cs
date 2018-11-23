@@ -13,10 +13,6 @@ namespace UpdateBazeKMZ
     {
         public NRMProcess(string filePath) : base(filePath) { }
 
-        private Queue<DataTable> _dataPool = new Queue<DataTable>();
-        private bool _inProgress = false;
-
-
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
@@ -38,10 +34,9 @@ namespace UpdateBazeKMZ
         {
             DataTable dataTable = getTable();
             cHandle.ExecuteQuery("DELETE FROM TBNRM");
-            _inProgress = true;
+   
             int linesCount = totalLines(FilePath);
             int currentLineNumber = 0;
-            ThreadPool.QueueUserWorkItem(poolWriter); // запуск потока записи данных
 
             using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
             {
@@ -66,7 +61,7 @@ namespace UpdateBazeKMZ
                     // берем по 70к строк
                     if ((currentLineNumber % 70000 == 0) || (currentLineNumber == linesCount - 1))
                     {
-                        _dataPool.Enqueue(dataTable.Copy()); // очистка таблицы для ввода новых данных
+                        WriteAsync(dataTable, "TBNRM"); // очистка таблицы для ввода новых данных
                         dataTable.Clear();
                     }
 
@@ -78,21 +73,9 @@ namespace UpdateBazeKMZ
 
                 }
             }
-            _inProgress = false;
+
             OnProgressCompleted();
         }
-
-        private void poolWriter(object state)
-        {
-            while (_inProgress || _dataPool.Count != 0)
-            {
-                if (_dataPool.Count != 0)
-                {
-                    cHandle.InsertBulkQuery(_dataPool.Dequeue(), "TBNRM");
-                }
-            }
-        }
-
 
     }
 }

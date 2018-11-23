@@ -15,12 +15,12 @@ namespace UpdateBazeKMZ
     {
         public delegate void ProgressEvent(LoadProgressArgs args);
 
-        public string FilePath { get; private set; } 
-        public string FileName { get; private set; }
-
         public event ProgressEvent progressChanged;
         public event ProgressEvent progressNotify;
         public event ProgressEvent progressCompleted;
+
+        public string FilePath { get; private set; } 
+        public string FileName { get; private set; }
 
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
 
@@ -41,7 +41,7 @@ namespace UpdateBazeKMZ
         
         protected void OnProgressChanged(LoadProgressArgs args)
         {
-            // NOTE: below is the same as progressChanged(args) -- it's just a compiler sortage 
+            // NOTE: below sintax is the same as progressChanged(args) -- it's just a compiler sortage 
             progressChanged?.Invoke(args);
         }
 
@@ -75,12 +75,12 @@ namespace UpdateBazeKMZ
             ThreadPool.QueueUserWorkItem(new WaitCallback(
                 delegate(object state) 
                 {
-                    poolWriter(dt, tableName);
+                    Write(dt, tableName);
                 }
-                ), null); // запуск потока записи данных
+                ), null); // writer thread start
         }
 
-        private void poolWriter(DataTable dt, string tableName)
+        protected void Write(DataTable dt, string tableName)
         {
             cHandle.InsertBulkQuery(dt, tableName);
         }

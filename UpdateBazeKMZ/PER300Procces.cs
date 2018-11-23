@@ -49,7 +49,7 @@ namespace UpdateBazeKMZ
                 }
             }
 
-            cHandle.InsertBulkQuery(dataTable, "TBStorageBalance");
+            Write(dataTable, "TBStorageBalance");
             OnProgressCompleted();
         }
     }
