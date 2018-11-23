@@ -120,57 +120,63 @@
             // 
             // M104Load_Click
             // 
+            this.M104Load_Click.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.M104Load_Click.ForeColor = System.Drawing.SystemColors.ControlText;
             this.M104Load_Click.Location = new System.Drawing.Point(257, 121);
             this.M104Load_Click.Name = "M104Load_Click";
             this.M104Load_Click.Size = new System.Drawing.Size(295, 39);
             this.M104Load_Click.TabIndex = 9;
             this.M104Load_Click.Tag = "\\\\192.168.16.50\\bazaotd\\M104.TXT";
             this.M104Load_Click.Text = "Загрузка файла M104";
-            this.M104Load_Click.UseVisualStyleBackColor = true;
+            this.M104Load_Click.UseVisualStyleBackColor = false;
             this.M104Load_Click.Click += new System.EventHandler(this.LoadM104_Click);
             // 
             // cmdOSTM
             // 
+            this.cmdOSTM.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.cmdOSTM.Location = new System.Drawing.Point(257, 71);
             this.cmdOSTM.Name = "cmdOSTM";
             this.cmdOSTM.Size = new System.Drawing.Size(295, 44);
             this.cmdOSTM.TabIndex = 8;
             this.cmdOSTM.Tag = "\\\\192.168.16.50\\BazaOtd\\OSTM.txt";
             this.cmdOSTM.Text = "Импорт файла OSTM.txt (Остатки материалов в подразделениях)";
-            this.cmdOSTM.UseVisualStyleBackColor = true;
+            this.cmdOSTM.UseVisualStyleBackColor = false;
             this.cmdOSTM.Click += new System.EventHandler(this.cmdOSTM_Click);
             // 
             // cmdPer300
             // 
+            this.cmdPer300.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.cmdPer300.Location = new System.Drawing.Point(257, 21);
             this.cmdPer300.Name = "cmdPer300";
             this.cmdPer300.Size = new System.Drawing.Size(295, 35);
             this.cmdPer300.TabIndex = 7;
             this.cmdPer300.Tag = "\\\\192.168.16.50\\BazaOtd\\PER300.txt";
             this.cmdPer300.Text = "Остатки материалов на складах (PER300)";
-            this.cmdPer300.UseVisualStyleBackColor = true;
+            this.cmdPer300.UseVisualStyleBackColor = false;
             this.cmdPer300.Click += new System.EventHandler(this.cmdPer300_Click);
             // 
             // cmdLoadRoutes
             // 
+            this.cmdLoadRoutes.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.cmdLoadRoutes.Location = new System.Drawing.Point(6, 353);
             this.cmdLoadRoutes.Name = "cmdLoadRoutes";
             this.cmdLoadRoutes.Size = new System.Drawing.Size(245, 52);
             this.cmdLoadRoutes.TabIndex = 6;
             this.cmdLoadRoutes.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\MARSH.txt";
             this.cmdLoadRoutes.Text = "Импорт файла MARSH (Маршруты деталей)";
-            this.cmdLoadRoutes.UseVisualStyleBackColor = true;
+            this.cmdLoadRoutes.UseVisualStyleBackColor = false;
             this.cmdLoadRoutes.Click += new System.EventHandler(this.cmdLoadRoutes_Click);
             // 
             // cmdLoadNRM
             // 
+            this.cmdLoadNRM.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.cmdLoadNRM.Location = new System.Drawing.Point(6, 241);
             this.cmdLoadNRM.Name = "cmdLoadNRM";
             this.cmdLoadNRM.Size = new System.Drawing.Size(245, 47);
             this.cmdLoadNRM.TabIndex = 5;
             this.cmdLoadNRM.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\NRM.txt";
             this.cmdLoadNRM.Text = "Импорт файла NRM (Норма расхода материала)";
-            this.cmdLoadNRM.UseVisualStyleBackColor = true;
+            this.cmdLoadNRM.UseVisualStyleBackColor = false;
             this.cmdLoadNRM.Click += new System.EventHandler(this.cmdLoadNRM_Click);
             // 
             // cmdLoadPTN

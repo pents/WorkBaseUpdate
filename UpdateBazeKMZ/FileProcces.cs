@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DBConnectionLib;
 using System.IO;
 using System.Data;
+using System.Threading;
 
 namespace UpdateBazeKMZ
 {
@@ -13,6 +14,7 @@ namespace UpdateBazeKMZ
     public abstract class FileProcces
     {
         public delegate void ProgressEvent(LoadProgressArgs args);
+
         public string FilePath { get; private set; } 
         public string FileName { get; private set; }
 
@@ -20,8 +22,9 @@ namespace UpdateBazeKMZ
         public event ProgressEvent progressNotify;
         public event ProgressEvent progressCompleted;
 
-       
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
+
+        private bool _inProgress = false;
 
         protected FileProcces(string filePath)
         {
@@ -32,6 +35,8 @@ namespace UpdateBazeKMZ
                 FileName += FilePath[i];
             }
             FileName = new string(FileName.Reverse().ToArray());
+
+            _inProgress = true;
         }
         
         protected void OnProgressChanged(LoadProgressArgs args)
@@ -49,6 +54,7 @@ namespace UpdateBazeKMZ
 
         protected void OnProgressCompleted()
         {
+            _inProgress = false;
             progressCompleted?.Invoke(new LoadProgressArgs(0,0));
         }
 
@@ -61,6 +67,22 @@ namespace UpdateBazeKMZ
 
                 return i;
             }
+        }
+
+        protected void WriteAsync(DataTable dataTable, string tableName)
+        {
+            DataTable dt = dataTable.Copy();
+            ThreadPool.QueueUserWorkItem(new WaitCallback(
+                delegate(object state) 
+                {
+                    poolWriter(dt, tableName);
+                }
+                ), null); // запуск потока записи данных
+        }
+
+        private void poolWriter(DataTable dt, string tableName)
+        {
+            cHandle.InsertBulkQuery(dt, tableName);
         }
 
         public abstract void ReadFile();
