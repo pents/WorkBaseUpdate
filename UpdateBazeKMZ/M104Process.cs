@@ -30,7 +30,7 @@ namespace UpdateBazeKMZ
         public override void ReadFile()
         {
             cHandle.ExecuteQuery("DELETE FROM TBM104");
-
+            OnProgressNotify("Инициализация...");
             int linesCount = totalLines(FilePath);
             int currentLineNumber = 1;
 

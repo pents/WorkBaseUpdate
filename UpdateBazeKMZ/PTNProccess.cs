@@ -14,7 +14,6 @@ namespace UpdateBazeKMZ
         public PTNProccess(string filePath) : base(filePath) { }
 
         private Queue<DataTable> _dataPool = new Queue<DataTable>();
-        private bool _inProgress = false;
 
 
         private DataTable getTable()
@@ -40,7 +39,6 @@ namespace UpdateBazeKMZ
         public override void ReadFile()
         {
             cHandle.ExecuteQuery("DELETE FROM TBPTN");
-            _inProgress = true;
             OnProgressNotify("Инициализация...");
             int linesCount = totalLines(FilePath);
             int currentLineNumber = 1;
