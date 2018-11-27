@@ -11,30 +11,28 @@ namespace UpdateBazeKMZ
     public class CSMRProcess : FileProcces
     {
 
-
         private DataTable dataTable;
 
         public CSMRProcess(string filePath) : base(filePath) { dataTable = getTable(); }
-
-
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("MaterialNumber", typeof(int));
-            dt.Columns.Add("ItemType", typeof(string));
-            dt.Columns.Add("MaterialName", typeof(int));
-            dt.Columns.Add("MainNomenclature", typeof(int));
-            dt.Columns.Add("GLCode", typeof(int));
-            dt.Columns.Add("KEI", typeof(float));
-            dt.Columns.Add("AccountPrice", typeof(float));
-            dt.Columns.Add("JAccountPrice", typeof(float));
-            dt.Columns.Add("ReserveRate", typeof(int));
-            dt.Columns.Add("TransitRate", typeof(int));
-            dt.Columns.Add("WNumber", typeof(int));
-            dt.Columns.Add("JPromPrice", typeof(string));
-            dt.Columns.Add("Date", typeof(int));
+            dt.Columns.Add("MaterialNumber",   typeof(string));
+            dt.Columns.Add("ItemType",         typeof(string));
+            dt.Columns.Add("MaterialName",     typeof(string));
+            dt.Columns.Add("MainNomenclature", typeof(string));
+            dt.Columns.Add("GLCode",           typeof(string));
+            dt.Columns.Add("KEI",              typeof(string));
+            dt.Columns.Add("AccountPrice",     typeof(decimal));
+            dt.Columns.Add("JAccountPrice",    typeof(string));
+            dt.Columns.Add("ReserveRate",      typeof(string));
+            dt.Columns.Add("TransitRate",      typeof(string));
+            dt.Columns.Add("WNumber",          typeof(string));
+            dt.Columns.Add("PromPrice",        typeof(decimal));
+            dt.Columns.Add("JPromPrice",       typeof(string));
+            dt.Columns.Add("Date",             typeof(string));
             dt.Columns.Add("TypeOfAcceptance", typeof(string));
             return dt;
         }
@@ -47,6 +45,9 @@ namespace UpdateBazeKMZ
             currentLine.Substring(170, 2),
             currentLine.Substring(172, 2));
 
+            decimal acPrice = Convert.ToDecimal(currentLine.Substring(100, 13).Trim().Replace('.', ',')); //Учетная цена
+            decimal pPrice = Convert.ToDecimal(currentLine.Substring(140, 13).Trim().Replace('.', ','));  //Перспективная цена
+
             dataTable.Rows.Add(
                 currentLine.Substring(0, 12), // MaterialNumber
                 currentLine.Substring(12, 1), // ItemType
@@ -54,12 +55,12 @@ namespace UpdateBazeKMZ
                 currentLine.Substring(93, 1), // MainNomenclature
                 currentLine.Substring(94, 2),   // GLCode
                 currentLine.Substring(96, 3), // KEI
-                currentLine.Substring(100, 13), // AccountPrice
+                acPrice, // AccountPrice
                 currentLine.Substring(113, 15), // JAccountPrice
                 currentLine.Substring(128, 3), // ReserveRate
                 currentLine.Substring(131, 5), // TransitRate
                 currentLine.Substring(136, 3), // WNumber
-                currentLine.Substring(140, 13), // PromPrice
+                pPrice, // PromPrice
                 currentLine.Substring(153, 15), // JPromPrice
                 date, // Date
                 currentLine.Substring(174, 1) // TypeOfAcceptance
@@ -94,7 +95,7 @@ namespace UpdateBazeKMZ
 
                     if (semiResult == "0")
                     {
-                        cHandle.ExecuteQuery(string.Format("DELETE FROM TBMaterial WHERE MateriolNumber = {0}", currentLine.Substring(0, 12)));
+                        cHandle.ExecuteQuery(string.Format("DELETE FROM TBMaterial WHERE MaterialNumber = {0}", currentLine.Substring(0, 12)));
                         updateTable(currentLine);
                     }
                     else
