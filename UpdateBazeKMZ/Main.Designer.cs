@@ -205,13 +205,14 @@
             // 
             // cmdLoadCSMR
             // 
+            this.cmdLoadCSMR.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.cmdLoadCSMR.Location = new System.Drawing.Point(6, 176);
             this.cmdLoadCSMR.Name = "cmdLoadCSMR";
             this.cmdLoadCSMR.Size = new System.Drawing.Size(245, 49);
             this.cmdLoadCSMR.TabIndex = 2;
             this.cmdLoadCSMR.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\CSMR.txt";
             this.cmdLoadCSMR.Text = "Импотр файла CSMR (Загрузка материалов)";
-            this.cmdLoadCSMR.UseVisualStyleBackColor = true;
+            this.cmdLoadCSMR.UseVisualStyleBackColor = false;
             this.cmdLoadCSMR.Click += new System.EventHandler(this.cmdLoadCSMR_Click);
             // 
             // cmdImportM101

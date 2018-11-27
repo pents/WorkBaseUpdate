@@ -22,19 +22,20 @@ namespace UpdateBazeKMZ
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("DetailID", typeof(int));
-            dt.Columns.Add("Operation", typeof(string));
-            dt.Columns.Add("DepID", typeof(int));
-            dt.Columns.Add("EquipmentID", typeof(int));
-            dt.Columns.Add("Rank", typeof(int));
-            dt.Columns.Add("NMin", typeof(float));
-            dt.Columns.Add("Price", typeof(float));
-            dt.Columns.Add("StMin", typeof(float));
-            dt.Columns.Add("Procent", typeof(int));
-            dt.Columns.Add("Mex", typeof(int));
-            dt.Columns.Add("Kvn", typeof(int));
-            dt.Columns.Add("PrUch", typeof(string));
-
+            dt.Columns.Add("MaterialNumber", typeof(int));
+            dt.Columns.Add("ItemType", typeof(string));
+            dt.Columns.Add("MaterialName", typeof(int));
+            dt.Columns.Add("MainNomenclature", typeof(int));
+            dt.Columns.Add("GLCode", typeof(int));
+            dt.Columns.Add("KEI", typeof(float));
+            dt.Columns.Add("AccountPrice", typeof(float));
+            dt.Columns.Add("JAccountPrice", typeof(float));
+            dt.Columns.Add("ReserveRate", typeof(int));
+            dt.Columns.Add("TransitRate", typeof(int));
+            dt.Columns.Add("WNumber", typeof(int));
+            dt.Columns.Add("JPromPrice", typeof(string));
+            dt.Columns.Add("Date", typeof(int));
+            dt.Columns.Add("TypeOfAcceptance", typeof(string));
             return dt;
         }
 
