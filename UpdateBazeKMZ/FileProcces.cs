@@ -23,8 +23,13 @@ namespace UpdateBazeKMZ
         public string FileName { get; private set; }
 
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
+        protected DataTable dataTable = null;
+        protected bool deleteRequired;
 
+        private int linesCount;
+        private int currentLineNumber = 1;
         private bool _inProgress = false;
+        
 
         protected FileProcces(string filePath)
         {
@@ -39,6 +44,15 @@ namespace UpdateBazeKMZ
             _inProgress = true;
         }
         
+        protected void OnProgressAsyncWriteRequired(int requiredCount)
+        {
+            if ((currentLineNumber % requiredCount == 0) || (currentLineNumber == linesCount - 1))
+            {
+                WriteAsync(dataTable, dataTable.TableName);
+                dataTable.Clear();  // очистка таблицы для ввода новых данных
+            }
+        }
+
         protected void OnProgressChanged(LoadProgressArgs args)
         {
             // NOTE: below sintax is the same as progressChanged(args) -- it's just a compiler sortage 
@@ -55,7 +69,7 @@ namespace UpdateBazeKMZ
         protected void OnProgressCompleted()
         {
             _inProgress = false;
-            progressCompleted?.Invoke(new LoadProgressArgs(0,0));
+            progressCompleted?.Invoke(new LoadProgressArgs(0,0,FileName));
         }
 
         protected int totalLines(string filePath)
@@ -69,23 +83,51 @@ namespace UpdateBazeKMZ
             }
         }
 
-        protected void WriteAsync(DataTable dataTable, string tableName)
+        private void Write(DataTable dt, string tableName)
+        {
+            cHandle.InsertBulkQuery(dt, tableName);
+        }
+
+        private void WriteAsync(DataTable dataTable, string tableName)
         {
             DataTable dt = dataTable.Copy();
             ThreadPool.QueueUserWorkItem(new WaitCallback(
-                delegate(object state) 
+                delegate (object state)
                 {
                     Write(dt, tableName);
                 }
                 ), null); // writer thread start
         }
 
-        protected void Write(DataTable dt, string tableName)
+        private void progressStateUpdate()
         {
-            cHandle.InsertBulkQuery(dt, tableName);
+            if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
+            {
+                OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount - 1)); // текущее состояние загрузки
+            }
         }
 
-        public abstract void ReadFile();
+        public void ReadFile()
+        {
+            if (deleteRequired) cHandle.ExecuteQuery(string.Format("DELETE FROM {0}", dataTable.TableName));
+            OnProgressNotify("Инициализация...");
+            linesCount = totalLines(FilePath);
+
+            using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
+            {
+                string currentLine = "";
+                while ((currentLine = fileStream.ReadLine()).Length > 5)
+                {
+                    processFile(currentLine);
+                    currentLineNumber++;
+                    progressStateUpdate();
+                }
+                Write(dataTable, dataTable.TableName);
+            }
+            OnProgressCompleted();
+        }
+
+        protected abstract void processFile(string currentLine);
 
     }
 }

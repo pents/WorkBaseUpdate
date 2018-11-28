@@ -1088,7 +1088,7 @@ namespace UpdateBazeKMZ
                 tsProgressBar.ProgressBar.Visible = false;
                 tsLabInfo.Visible = false;
                 toolStripStatusLabel1.Text = "";
-                Log.Add("Загрузка завершена");
+                Log.Add(string.Format("Загрузка {0} завершена", args.message));
             });
         }
 

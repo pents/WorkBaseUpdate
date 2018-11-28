@@ -11,13 +11,13 @@ namespace UpdateBazeKMZ
     public class CSMRProcess : FileProcces
     {
 
-        private DataTable dataTable;
-
-        public CSMRProcess(string filePath) : base(filePath) { dataTable = getTable(); }
+        public CSMRProcess(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = false; }
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
+
+            dt.TableName = "TBMaterial";
 
             dt.Columns.Add("MaterialNumber",   typeof(string));
             dt.Columns.Add("ItemType",         typeof(string));
@@ -39,7 +39,7 @@ namespace UpdateBazeKMZ
 
         private void updateTable(string currentLine)
         {
-            
+
             string date = string.Format("{0}.{1}.{2}",
             currentLine.Substring(168, 2),
             currentLine.Substring(170, 2),
@@ -67,58 +67,32 @@ namespace UpdateBazeKMZ
             );
         }
 
-        public override void ReadFile()
+        protected override void processFile(string currentLine)
         {
-            OnProgressNotify("Инициализация...");
-            int linesCount = totalLines(FilePath);
-            int currentLineNumber = 1;
 
-            string semiResult = "";
-
-             
-
-            using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
+            string semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBStorage WHERE Number = '{0}' AND GroupLeader = '{1}'",
+                                                        currentLine.Substring(136, 3), currentLine.Substring(94, 2)));
+            if (semiResult == "0")
             {
-                string currentLine = "";
-                while ((currentLine = fileStream.ReadLine()).Length > 5)
-                {
-                    semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBStorage WHERE Number = '{0}' AND GroupLeader = '{1}'",
-                                                             currentLine.Substring(136, 3), currentLine.Substring(94, 2)));
-                    if (semiResult == "0")
-                    {
-                        cHandle.ExecuteQuery(string.Format("INSERT INTO TBStorage (Number, GroupLeader) VALUES ({0},{1})", 
-                                             currentLine.Substring(136,3), currentLine.Substring(94,2)));
-                    }
-
-                    semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBMaterial WHERE MaterialNumber = {0}", 
-                                                             currentLine.Substring(0,12)));
-
-                    if (semiResult == "0")
-                    {
-                        cHandle.ExecuteQuery(string.Format("DELETE FROM TBMaterial WHERE MaterialNumber = {0}", currentLine.Substring(0, 12)));
-                        updateTable(currentLine);
-                    }
-                    else
-                    {
-                        updateTable(currentLine);
-                    }
-
-                    // каждые 50k строк запускаем поток записи и сбрасываем в него накопившиеся данные
-                    if ((currentLineNumber % 50000 == 0) || (currentLineNumber == linesCount - 1))
-                    {
-                        WriteAsync(dataTable, "TBMaterial");
-                        dataTable.Clear();  // очистка таблицы для ввода новых данных
-                    }
-                    if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
-                    {
-                        OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount - 1)); // текущее состояние загрузки
-                    }
-
-                    currentLineNumber++;
-
-                }
+                cHandle.ExecuteQuery(string.Format("INSERT INTO TBStorage (Number, GroupLeader) VALUES ({0},{1})", 
+                                        currentLine.Substring(136,3), currentLine.Substring(94,2)));
             }
-            OnProgressCompleted();
+
+            semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBMaterial WHERE MaterialNumber = {0}", 
+                                                        currentLine.Substring(0,12)));
+
+
+            
+            if (semiResult == "0")
+            {
+                cHandle.ExecuteQuery(string.Format("DELETE FROM TBMaterial WHERE MaterialNumber = {0}", currentLine.Substring(0, 12)));
+            }
+            updateTable(currentLine);
+
+            // каждые 50k строк запускаем поток записи и сбрасываем в него накопившиеся данные
+            OnProgressAsyncWriteRequired(50000);                   
+
+            
         }
     }
 }

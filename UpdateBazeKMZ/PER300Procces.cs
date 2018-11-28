@@ -12,11 +12,13 @@ namespace UpdateBazeKMZ
     
     public class File_PER300 : FileProcces
     {
-        public File_PER300(string filePath) : base(filePath) { }
+        public File_PER300(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
+
+            dt.TableName = "TBStorageBalance";
 
             dt.Columns.Add("MaterialID", typeof(string));
             dt.Columns.Add("Storage", typeof(string));
@@ -25,32 +27,13 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
-        public override void ReadFile()
+        protected override void processFile(string currentLine)
         {
-            DataTable dataTable = getTable();
-            cHandle.ExecuteQuery("DELETE FROM TBStorageBalance");
-            int linesCount = totalLines(FilePath);
-            int currentLineNumber = 0;
-            using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
-            {
-                string currentLine = "";
-                while ((currentLine = fileStream.ReadLine()).Length > 5)
-                {
-                    dataTable.Rows.Add(
-                        currentLine.Substring(3,12), currentLine.Substring(0,3), 
-                        currentLine.Substring(15,11), currentLine.Substring(26,11)
-                        );
+            dataTable.Rows.Add(
+                currentLine.Substring(3,12), currentLine.Substring(0,3), 
+                currentLine.Substring(15,11), currentLine.Substring(26,11)
+                );
 
-                    if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
-                    {
-                        OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount - 1)); // текущее состояние загрузки
-                    }
-                    currentLineNumber++;
-                }
-            }
-
-            Write(dataTable, "TBStorageBalance");
-            OnProgressCompleted();
         }
     }
 }

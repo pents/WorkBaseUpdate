@@ -8,11 +8,13 @@ namespace UpdateBazeKMZ
 {
     public class File_M104 : FileProcces
     {
-        public File_M104(string filePath) : base(filePath) { }
+        public File_M104(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
+
+            dt.TableName = "TBM104";
 
             dt.Columns.Add("Production",           typeof(string));
             dt.Columns.Add("Assemblyes",           typeof(string));
@@ -27,59 +29,31 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
-        public override void ReadFile()
+        protected override void processFile(string currentLine)
         {
-            cHandle.ExecuteQuery("DELETE FROM TBM104");
-            OnProgressNotify("Инициализация...");
-            int linesCount = totalLines(FilePath);
-            int currentLineNumber = 1;
+            string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{0}'",
+            currentLine.Substring(50, 25).Trim()));
 
-            DataTable dataTable = getTable(); // создание таблицы для ввода данных
-
-            using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
+            if (DetailID == "0")
             {
-                string currentLine = "";
-                while ((currentLine = fileStream.ReadLine()).Length > 5)
-                {
-                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM SGT_MMC.dbo.TBDetailID WHERE Detail = '{0}'",
-                    currentLine.Substring(50, 25).Trim()));
-
-                    if (DetailID == "0")
-                    {
-                        OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
-                        currentLineNumber++;
-                        continue;
-                    }
-                    else
-                    {
-                        dataTable.Rows.Add(currentLine.Substring(136, 10).Trim(),
-                                            currentLine.Substring(25, 25).Trim(),
-                                            int.Parse(DetailID),
-                                            float.Parse(currentLine.Substring(75, 9).Trim().Replace('.', ',')),
-                                            float.Parse(currentLine.Substring(84, 9).Trim().Replace('.', ',')),
-                                            int.Parse(currentLine.Substring(93, 1)),
-                                            int.Parse(currentLine.Substring(94, 1)),
-                                            int.Parse(currentLine.Substring(95, 1)),
-                                            currentLine.Substring(96, 25).Trim()
-                                            );
-
-
-                    }
-                    // каждые по 150к строк запускаем поток записи и сбрасываем в него накопившиеся данные
-                    if ((currentLineNumber % 150000 == 0) || (currentLineNumber == linesCount-1))
-                    {
-                        WriteAsync(dataTable, "TBM104"); 
-                        dataTable.Clear();  // очистка таблицы для ввода новых данных
-                    }
-                    if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount-1))
-                    {
-                        OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount-1)); // текущее состояние загрузки
-                    }
-                        
-                    currentLineNumber++;
-                }
+                OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(50, 25).Trim()));
             }
-            OnProgressCompleted();
+            else
+            {
+                dataTable.Rows.Add(currentLine.Substring(136, 10).Trim(),
+                                    currentLine.Substring(25, 25).Trim(),
+                                    int.Parse(DetailID),
+                                    float.Parse(currentLine.Substring(75, 9).Trim().Replace('.', ',')),
+                                    float.Parse(currentLine.Substring(84, 9).Trim().Replace('.', ',')),
+                                    int.Parse(currentLine.Substring(93, 1)),
+                                    int.Parse(currentLine.Substring(94, 1)),
+                                    int.Parse(currentLine.Substring(95, 1)),
+                                    currentLine.Substring(96, 25).Trim()
+                                    );
+
+            }
+            // каждые по 150к строк запускаем поток записи и сбрасываем в него накопившиеся данные
+            OnProgressAsyncWriteRequired(150000);
         }
 
     }

@@ -10,12 +10,14 @@ namespace UpdateBazeKMZ
 {
     public class File_Marsh : FileProcces
     {
-        public File_Marsh(string filePath) : base(filePath) { }
+        public File_Marsh(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
 
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
+
+            dt.TableName = "TBRoutes";
 
             dt.Columns.Add("DetailID", typeof(int));
             dt.Columns.Add("Route", typeof(string));
@@ -23,38 +25,18 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
-        public override void ReadFile()
+        protected override void processFile(string currentLine)
         {
-            DataTable dataTable = getTable();
-            cHandle.ExecuteQuery("DELETE FROM TBRoutes");
 
-            int linesCount = totalLines(FilePath);
-            int currentLineNumber = 0;
-            using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
+            string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", currentLine.Substring(0, 25)));
+
+            if (DetailID == "0")
             {
-                string currentLine = "";
-                while ((currentLine = fileStream.ReadLine()).Length > 5)
-                {
-                    string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", currentLine.Substring(0, 25)));
-
-                    if (DetailID == "0")
-                    {
-                        OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(0, 25)));
-                        continue;
-                    }
-
-                    dataTable.Rows.Add(int.Parse(DetailID), currentLine.Substring(25).Trim());
-
-                    if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
-                    {
-                        OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount - 1)); // текущее состояние загрузки
-                    }
-                    currentLineNumber++;
-                }
+                OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(0, 25)));
+            }else
+            {
+                dataTable.Rows.Add(int.Parse(DetailID), currentLine.Substring(25).Trim());
             }
-
-            Write(dataTable, "TBRoutes");
-            OnProgressCompleted();
         }
     }
 }

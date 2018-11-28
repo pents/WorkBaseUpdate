@@ -10,11 +10,13 @@ namespace UpdateBazeKMZ
 {
     public class File_OSMT : FileProcces
     {
-        public File_OSMT(string filePath) : base(filePath) { }
+        public File_OSMT(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
 
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
+
+            dt.TableName = "TBBalanceDep";
 
             dt.Columns.Add("Dep",           typeof(string));
             dt.Columns.Add("MOL",           typeof(string));
@@ -24,32 +26,14 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
-        public override void ReadFile()
+        protected override void processFile(string currentLine)
         {
-            DataTable dataTable = getTable();
-            cHandle.ExecuteQuery("DELETE FROM TBBalanceDep");
-            int linesCount = totalLines(FilePath);
-            int currentLineNumber = 0;
-            using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))
-            {
-                string currentLine = "";
-                while ((currentLine = fileStream.ReadLine()).Length > 5)
-                {
-                    dataTable.Rows.Add(
-                        currentLine.Substring(0, 3).Trim(), currentLine.Substring(3, 2).Trim(),
-                        currentLine.Substring(5, 12).Trim(), currentLine.Substring(113, 12).Trim()
-                        );
 
-                    if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
-                    {
-                        OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount - 1)); // текущее состояние загрузки
-                    }
-                    currentLineNumber++;
-                }
-            }
+            dataTable.Rows.Add(
+                currentLine.Substring(0, 3).Trim(), currentLine.Substring(3, 2).Trim(),
+                currentLine.Substring(5, 12).Trim(), currentLine.Substring(113, 12).Trim()
+                );
 
-            Write(dataTable, "TBBalanceDep");
-            OnProgressCompleted();
         }
     }
 }

@@ -75,6 +75,7 @@
     </Compile>
     <Compile Include="LoadProgressArgs.cs" />
     <Compile Include="M104Process.cs" />
+    <Compile Include="M106Process.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
