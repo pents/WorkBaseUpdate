@@ -13,9 +13,9 @@ namespace UpdateBazeKMZ
     {
         public PTNProccess(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
 
-        private string DepID = "";
-        private string EquipID = "";
-        private string DetailID = "";
+        private string _depID = "";
+        private string _equipID = "";
+        private string _detailID = "";
 
         private DataTable getTable()
         {
@@ -42,34 +42,34 @@ namespace UpdateBazeKMZ
         {
 
 
-            DepID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDeps WHERE Dep + Sector = {0}", currentLine.Substring(34, 5)));
-            if (DepID == "0")
+            _depID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDeps WHERE Dep + Sector = '{0}'", currentLine.Substring(34, 5).Trim()));
+            if (_depID == "0")
             {
-                cHandle.ExecuteQuery(string.Format("INSERT INTO TBDeps(Dep, Sector) VALUES ({0},{1})",
-                                                    currentLine.Substring(34,3),
-                                                    currentLine.Substring(37,2)
+                cHandle.ExecuteQuery(string.Format("INSERT INTO TBDeps(Dep, Sector) VALUES ('{0}','{1}')",
+                                                    currentLine.Substring(34,3).Trim(),
+                                                    currentLine.Substring(37,2).Trim()
                                                     ));
-                DepID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDeps WHERE Dep + Sector = {0}", currentLine.Substring(34, 5)));
+                _depID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDeps WHERE Dep + Sector = '{0}'", currentLine.Substring(34, 5).Trim()));
             }
 
-            EquipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = {1}",
-                                                                DepID,
-                                                                currentLine.Substring(39,10)
+            _equipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = '{1}'",
+                                                                _depID,
+                                                                currentLine.Substring(39,10).Trim()
                                                                 ));
 
-            if (EquipID == "0")
+            if (_equipID == "0")
             {
-                cHandle.ExecuteQuery(string.Format("INSERT INTO TBEquipmets(DepID, Equipment) VALUES ({0},{1})",
-                                                    DepID,
-                                                    currentLine.Substring(39, 10)
+                cHandle.ExecuteQuery(string.Format("INSERT INTO TBEquipmets(DepID, Equipment) VALUES ({0},'{1}')",
+                                                    _depID,
+                                                    currentLine.Substring(39, 10).Trim()
                                                     ));
-                EquipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = {1}",
-                                                                    DepID,
+                _equipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = {1}",
+                                                                    _depID,
                                                                     currentLine.Substring(39, 10)
                                                                     ));
             }
 
-            DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", 
+            _detailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", 
                                                     currentLine.Substring(3,25)));
 
 
@@ -79,17 +79,17 @@ namespace UpdateBazeKMZ
             int proc = Convert.ToInt32(currentLine.Substring(84, 3).Trim()); //Процент возврата
 
 
-            dataTable.Rows.Add( int.Parse(DetailID),
+            dataTable.Rows.Add( int.Parse(_detailID),
                                 currentLine.Substring(28, 6).Trim(),
-                                int.Parse(DepID),
-                                int.Parse(EquipID),
-                                int.Parse(currentLine.Substring(49, 1)),
+                                int.Parse(_depID),
+                                int.Parse(_equipID),
+                                int.Parse(currentLine.Substring(49, 1).Trim()),
                                 (float)nrm,
                                 (float)ras,
                                 (float)stm,
                                 proc,
-                                int.Parse(currentLine.Substring(87, 1)),
-                                int.Parse(currentLine.Substring(88, 1)),
+                                int.Parse(currentLine.Substring(87, 1).Trim()),
+                                int.Parse(currentLine.Substring(88, 1).Trim()),
                                 currentLine.Substring(89, 1).Trim()
                                 );
 

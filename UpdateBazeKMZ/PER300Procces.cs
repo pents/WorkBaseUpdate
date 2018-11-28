@@ -30,8 +30,8 @@ namespace UpdateBazeKMZ
         protected override void processFile(string currentLine)
         {
             dataTable.Rows.Add(
-                currentLine.Substring(3,12), currentLine.Substring(0,3), 
-                currentLine.Substring(15,11), currentLine.Substring(26,11)
+                currentLine.Substring(3,12).Trim(), currentLine.Substring(0,3).Trim(), 
+                currentLine.Substring(15,11).Trim(), currentLine.Substring(26,11).Trim()
                 );
 
         }

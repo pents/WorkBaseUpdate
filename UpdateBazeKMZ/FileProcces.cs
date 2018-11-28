@@ -110,7 +110,7 @@ namespace UpdateBazeKMZ
         public void ReadFile()
         {
             if (deleteRequired) cHandle.ExecuteQuery(string.Format("DELETE FROM {0}", dataTable.TableName));
-            OnProgressNotify("Инициализация...");
+            OnProgressNotify(string.Format("Инициализация {0}...", FileName));
             linesCount = totalLines(FilePath);
 
             using (StreamReader fileStream = new StreamReader(FilePath, Encoding.Default))

@@ -49,21 +49,21 @@ namespace UpdateBazeKMZ
             decimal pPrice = Convert.ToDecimal(currentLine.Substring(140, 13).Trim().Replace('.', ','));  //Перспективная цена
 
             dataTable.Rows.Add(
-                currentLine.Substring(0, 12), // MaterialNumber
-                currentLine.Substring(12, 1), // ItemType
-                currentLine.Substring(13, 80),// MaterialName 
-                currentLine.Substring(93, 1), // MainNomenclature
-                currentLine.Substring(94, 2),   // GLCode
-                currentLine.Substring(96, 3), // KEI
+                currentLine.Substring(0, 12).Trim(), // MaterialNumber
+                currentLine.Substring(12, 1).Trim(), // ItemType
+                currentLine.Substring(13, 80).Trim(),// MaterialName 
+                currentLine.Substring(93, 1).Trim(), // MainNomenclature
+                currentLine.Substring(94, 2).Trim(),   // GLCode
+                currentLine.Substring(96, 3).Trim(), // KEI
                 acPrice, // AccountPrice
-                currentLine.Substring(113, 15), // JAccountPrice
-                currentLine.Substring(128, 3), // ReserveRate
-                currentLine.Substring(131, 5), // TransitRate
-                currentLine.Substring(136, 3), // WNumber
+                currentLine.Substring(113, 15).Trim(), // JAccountPrice
+                currentLine.Substring(128, 3).Trim(), // ReserveRate
+                currentLine.Substring(131, 5).Trim(), // TransitRate
+                currentLine.Substring(136, 3).Trim(), // WNumber
                 pPrice, // PromPrice
-                currentLine.Substring(153, 15), // JPromPrice
+                currentLine.Substring(153, 15).Trim(), // JPromPrice
                 date, // Date
-                currentLine.Substring(174, 1) // TypeOfAcceptance
+                currentLine.Substring(174, 1).Trim() // TypeOfAcceptance
             );
         }
 
@@ -71,21 +71,19 @@ namespace UpdateBazeKMZ
         {
 
             string semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBStorage WHERE Number = '{0}' AND GroupLeader = '{1}'",
-                                                        currentLine.Substring(136, 3), currentLine.Substring(94, 2)));
+                                                        currentLine.Substring(136, 3).Trim(), currentLine.Substring(94, 2).Trim()));
             if (semiResult == "0")
             {
-                cHandle.ExecuteQuery(string.Format("INSERT INTO TBStorage (Number, GroupLeader) VALUES ({0},{1})", 
-                                        currentLine.Substring(136,3), currentLine.Substring(94,2)));
+                cHandle.ExecuteQuery(string.Format("INSERT INTO TBStorage (Number, GroupLeader) VALUES ('{0}','{1}')", 
+                                        currentLine.Substring(136,3).Trim(), currentLine.Substring(94,2).Trim()));
             }
 
-            semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBMaterial WHERE MaterialNumber = {0}", 
-                                                        currentLine.Substring(0,12)));
+            semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBMaterial WHERE MaterialNumber = '{0}'", 
+                                                        currentLine.Substring(0,12).Trim()));
 
-
-            
-            if (semiResult == "0")
+            if (semiResult != "0")
             {
-                cHandle.ExecuteQuery(string.Format("DELETE FROM TBMaterial WHERE MaterialNumber = {0}", currentLine.Substring(0, 12)));
+                cHandle.ExecuteQuery(string.Format("DELETE FROM TBMaterial WHERE MaterialNumber = '{0}'", currentLine.Substring(0, 12).Trim()));
             }
             updateTable(currentLine);
 
