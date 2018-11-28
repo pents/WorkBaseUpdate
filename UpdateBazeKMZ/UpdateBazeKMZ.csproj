@@ -65,6 +65,7 @@
     <Compile Include="CSMRProcess.cs" />
     <Compile Include="DBConnectionSettings.cs" />
     <Compile Include="FileProcces.cs" />
+    <Compile Include="GPProcess.cs" />
     <Compile Include="KMZBASE.cs">
       <DependentUpon>KMZBASE.xsd</DependentUpon>
     </Compile>

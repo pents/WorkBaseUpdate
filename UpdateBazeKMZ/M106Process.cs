@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace UpdateBazeKMZ
 {
-    public class M106Process : FileProcces
+    public class File_M106 : FileProcces
     {
-        public M106Process(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = false; }
+        public File_M106(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = false; }
 
         private string _checkRecord = "";
 

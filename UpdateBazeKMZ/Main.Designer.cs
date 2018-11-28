@@ -194,13 +194,14 @@
             // 
             // cmdLoadM106
             // 
+            this.cmdLoadM106.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
             this.cmdLoadM106.Location = new System.Drawing.Point(6, 120);
             this.cmdLoadM106.Name = "cmdLoadM106";
             this.cmdLoadM106.Size = new System.Drawing.Size(245, 40);
             this.cmdLoadM106.TabIndex = 3;
             this.cmdLoadM106.Tag = "\\\\192.168.16.50\\BazaOtd\\BAZEKMZ\\Files\\M106.txt";
             this.cmdLoadM106.Text = "Импорт файла М106 (Состав изделий/сборок)";
-            this.cmdLoadM106.UseVisualStyleBackColor = true;
+            this.cmdLoadM106.UseVisualStyleBackColor = false;
             this.cmdLoadM106.Click += new System.EventHandler(this.cmdLoadM106_Click);
             // 
             // cmdLoadCSMR

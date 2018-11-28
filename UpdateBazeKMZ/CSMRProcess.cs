@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace UpdateBazeKMZ
 {
-    public class CSMRProcess : FileProcces
+    public class File_CSMR : FileProcces
     {
 
-        public CSMRProcess(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = false; }
+        public File_CSMR(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = false; }
 
         private DataTable getTable()
         {

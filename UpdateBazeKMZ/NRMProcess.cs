@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace UpdateBazeKMZ
 {
-    public class NRMProcess : FileProcces
+    public class File_NRM : FileProcces
     {
-        public NRMProcess(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
+        public File_NRM(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
 
         private DataTable getTable()
         {

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace UpdateBazeKMZ
 {
-    public class PTNProccess : FileProcces
+    public class File_PTN : FileProcces
     {
-        public PTNProccess(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
+        public File_PTN(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
 
         private string _depID = "";
         private string _equipID = "";
