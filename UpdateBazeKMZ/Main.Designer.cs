@@ -120,7 +120,8 @@
             // 
             // M104Load_Click
             // 
-            this.M104Load_Click.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.M104Load_Click.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.M104Load_Click.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.M104Load_Click.ForeColor = System.Drawing.SystemColors.ControlText;
             this.M104Load_Click.Location = new System.Drawing.Point(257, 121);
             this.M104Load_Click.Name = "M104Load_Click";
@@ -133,7 +134,8 @@
             // 
             // cmdOSTM
             // 
-            this.cmdOSTM.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdOSTM.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.cmdOSTM.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cmdOSTM.Location = new System.Drawing.Point(257, 71);
             this.cmdOSTM.Name = "cmdOSTM";
             this.cmdOSTM.Size = new System.Drawing.Size(295, 44);
@@ -145,7 +147,8 @@
             // 
             // cmdPer300
             // 
-            this.cmdPer300.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdPer300.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.cmdPer300.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cmdPer300.Location = new System.Drawing.Point(257, 21);
             this.cmdPer300.Name = "cmdPer300";
             this.cmdPer300.Size = new System.Drawing.Size(295, 35);
@@ -157,7 +160,8 @@
             // 
             // cmdLoadRoutes
             // 
-            this.cmdLoadRoutes.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdLoadRoutes.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.cmdLoadRoutes.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cmdLoadRoutes.Location = new System.Drawing.Point(6, 353);
             this.cmdLoadRoutes.Name = "cmdLoadRoutes";
             this.cmdLoadRoutes.Size = new System.Drawing.Size(245, 52);
@@ -169,7 +173,8 @@
             // 
             // cmdLoadNRM
             // 
-            this.cmdLoadNRM.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdLoadNRM.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.cmdLoadNRM.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cmdLoadNRM.Location = new System.Drawing.Point(6, 241);
             this.cmdLoadNRM.Name = "cmdLoadNRM";
             this.cmdLoadNRM.Size = new System.Drawing.Size(245, 47);
@@ -181,7 +186,8 @@
             // 
             // cmdLoadPTN
             // 
-            this.cmdLoadPTN.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdLoadPTN.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.cmdLoadPTN.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cmdLoadPTN.ForeColor = System.Drawing.SystemColors.ControlText;
             this.cmdLoadPTN.Location = new System.Drawing.Point(6, 303);
             this.cmdLoadPTN.Name = "cmdLoadPTN";
@@ -194,7 +200,8 @@
             // 
             // cmdLoadM106
             // 
-            this.cmdLoadM106.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdLoadM106.BackColor = System.Drawing.SystemColors.Control;
+            this.cmdLoadM106.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cmdLoadM106.Location = new System.Drawing.Point(6, 120);
             this.cmdLoadM106.Name = "cmdLoadM106";
             this.cmdLoadM106.Size = new System.Drawing.Size(245, 40);
@@ -206,7 +213,8 @@
             // 
             // cmdLoadCSMR
             // 
-            this.cmdLoadCSMR.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.cmdLoadCSMR.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.cmdLoadCSMR.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cmdLoadCSMR.Location = new System.Drawing.Point(6, 176);
             this.cmdLoadCSMR.Name = "cmdLoadCSMR";
             this.cmdLoadCSMR.Size = new System.Drawing.Size(245, 49);

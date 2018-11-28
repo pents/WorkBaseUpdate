@@ -34,7 +34,7 @@ namespace UpdateBazeKMZ
         {
             string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailID WHERE Detail = '{0}'",
                               currentLine.Substring(3, 25).Trim()));
-            if (DetailID == "0")
+            if (DetailID != "0")
             {
                 cHandle.ExecuteQuery(string.Format("DELETE FROM TBDetailID WHERE Detail = '{0}'",
                               currentLine.Substring(3, 25).Trim()));
