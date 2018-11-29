@@ -18,7 +18,7 @@ namespace UpdateBazeKMZ
 
             dt.Columns.Add("Production",           typeof(string));
             dt.Columns.Add("Assemblyes",           typeof(string));
-            dt.Columns.Add("DetailID",             typeof(int));
+            dt.Columns.Add("CodeDetailsID",        typeof(int));
             dt.Columns.Add("CountAssembly",        typeof(float));
             dt.Columns.Add("CountProductions",     typeof(float));
             dt.Columns.Add("TypeDetais",           typeof(int));

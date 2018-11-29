@@ -29,8 +29,7 @@ namespace UpdateBazeKMZ
 
             // Initialization of database connection
             DBConnectionSettings dbSettings = new DBConnectionSettings("10.255.7.203", "SGT_MMC", "UsersSGT", "123QWEasd", false);
-            // Initialization of log file
-            Log.Init(string.Format("{0}\\Logs\\UpdateBazeKMZ_LOG{1}.txt", Directory.GetCurrentDirectory(), DateTime.Now.ToShortDateString()));
+
         }
 
         #endregion
@@ -85,7 +84,8 @@ namespace UpdateBazeKMZ
             file.progressNotify += File_progressNotify;
             file.progressChanged += File_progressChanged;
             file.progressCompleted += File_progressCompleted;
-            Log.Add(string.Format("Начало загрузки {0}", file.FileName));
+            // Initialization of log file
+            Log.Init(string.Format("{0}\\Logs\\Load{2}_LOG{1}.txt", Directory.GetCurrentDirectory(), DateTime.Now.ToShortDateString(), file.FileName));
             file.ReadFile();
         }
 

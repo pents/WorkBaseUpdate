@@ -61,9 +61,7 @@ namespace UpdateBazeKMZ
 
         protected void OnProgressNotify(string message)
         {
-            LoadProgressArgs args = new LoadProgressArgs(0,0,message);
-
-            progressNotify?.Invoke(args);
+            progressNotify?.Invoke(new LoadProgressArgs(0, 0, message));
         }
 
         protected void OnProgressCompleted()
