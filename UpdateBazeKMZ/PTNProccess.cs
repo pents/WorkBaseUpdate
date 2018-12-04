@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -11,11 +12,59 @@ namespace UpdateBazeKMZ
 {
     public class File_PTN : FileProcces
     {
-        public File_PTN(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
+        public File_PTN(string filePath) : base(filePath)
+        {
+            dataTable = getTable();
+            deleteRequired = true;
+            loadTBDeps();
+            loadTBDetail();
+            loadTBEquip();
+        }
 
         private string _depID = "";
         private string _equipID = "";
         private string _detailID = "";
+
+        private Hashtable HTDeps = new Hashtable();
+        private Hashtable HTEquip = new Hashtable();
+        private Hashtable HTDetail = new Hashtable();
+
+
+        private void loadTBDeps()
+        {
+            DataTable Data_TBDeps = cHandle.GetDataTable("SELECT ID, (Dep + Sector) as DEPSEC FROM TBDeps", "TBDeps");
+
+            foreach(DataRow row in Data_TBDeps.Rows)
+            {
+                HTDeps.Add(row["DEPSEC"], row["ID"]);
+            }
+
+            Data_TBDeps.Clear();
+        }
+
+        private void loadTBEquip()
+        {
+            DataTable Data_TBDeps = cHandle.GetDataTable("SELECT ID, DepID, Equipment  FROM TBEquipmets", "TBEquipmets");
+
+            foreach (DataRow row in Data_TBDeps.Rows)
+            {
+                string test = string.Format("{0}{1}", row["DepID"].ToString(), row["Equipment"].ToString());
+
+                HTEquip.Add(test, row["ID"]);
+            }
+            Data_TBDeps.Clear();
+        }
+
+        private void loadTBDetail()
+        {
+            DataTable Data_TBDeps = cHandle.GetDataTable("SELECT ID, Detail FROM TBDetailID", "TBDetailID");
+
+            foreach (DataRow row in Data_TBDeps.Rows)
+            {
+                HTDetail.Add(row["Detail"].ToString(), row["ID"]);
+            }
+            Data_TBDeps.Clear();
+        }
 
         private DataTable getTable()
         {
@@ -33,17 +82,15 @@ namespace UpdateBazeKMZ
             dt.Columns.Add("Procent", typeof(int));
             dt.Columns.Add("Mex", typeof(int));
             dt.Columns.Add("Kvn", typeof(int));
-            dt.Columns.Add("PrUch", typeof(string));
+            dt.Columns.Add("Pruch", typeof(string));
 
             return dt;
         }
 
         protected override void processFile(string currentLine)
         {
-
-
-            _depID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDeps WHERE Dep + Sector = '{0}'", currentLine.Substring(34, 5).Trim()));
-            if (_depID == "0")
+            
+            if (HTDeps[currentLine.Substring(34, 5).Trim()] == null)
             {
                 cHandle.ExecuteQuery(string.Format("INSERT INTO TBDeps(Dep, Sector) VALUES ('{0}','{1}')",
                                                     currentLine.Substring(34,3).Trim(),
@@ -51,27 +98,31 @@ namespace UpdateBazeKMZ
                                                     ));
                 _depID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDeps WHERE Dep + Sector = '{0}'", currentLine.Substring(34, 5).Trim()));
             }
-
-            _equipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = '{1}'",
-                                                                _depID,
-                                                                currentLine.Substring(39,10).Trim()
-                                                                ));
-
-            if (_equipID == "0")
+            else
             {
-                cHandle.ExecuteQuery(string.Format("INSERT INTO TBEquipmets(DepID, Equipment) VALUES ({0},'{1}')",
-                                                    _depID,
-                                                    currentLine.Substring(39, 10).Trim()
-                                                    ));
-                _equipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = {1}",
-                                                                    _depID,
-                                                                    currentLine.Substring(39, 10)
-                                                                    ));
+                _depID = HTDeps[currentLine.Substring(34, 5).Trim()].ToString();
             }
 
-            _detailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailsID WHERE Detail = {0}", 
-                                                    currentLine.Substring(3,25)));
+            
 
+            if (HTEquip[_depID + currentLine.Substring(39, 10).Trim().ToString()] == null)
+            {
+                return;
+                //cHandle.ExecuteQuery(string.Format("INSERT INTO TBEquipmets(DepID, Equipment) VALUES ({0},'{1}')",
+                //                                    _depID,
+                //                                    currentLine.Substring(39, 10).Trim()
+                //                                    ));
+                //_equipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = '{1}'",
+                //                                                    _depID,
+                //                                                    currentLine.Substring(39, 10)
+                //                                                    ));
+            }
+            else
+            {
+                _equipID = HTEquip[_depID + currentLine.Substring(39, 10).Trim().ToString()].ToString();
+            }
+
+            _detailID = HTDetail[currentLine.Substring(3, 25).Trim()].ToString();
 
             double nrm = Convert.ToDouble(currentLine.Substring(50, 10).Trim().Replace('.', ',')); //Норма расхода
             double ras = Convert.ToDouble(currentLine.Substring(60, 14).Trim().Replace('.', ',')); //Расценка
@@ -79,17 +130,17 @@ namespace UpdateBazeKMZ
             int proc = Convert.ToInt32(currentLine.Substring(84, 3).Trim()); //Процент возврата
 
 
-            dataTable.Rows.Add( int.Parse(_detailID),
+            dataTable.Rows.Add(int.Parse(_detailID),
                                 currentLine.Substring(28, 6).Trim(),
                                 int.Parse(_depID),
                                 int.Parse(_equipID),
-                                int.Parse(currentLine.Substring(49, 1).Trim()),
+                                int.Parse(currentLine.Substring(49, 1).Trim() == "" ? "0" : currentLine.Substring(49, 1).Trim()),
                                 (float)nrm,
                                 (float)ras,
                                 (float)stm,
                                 proc,
-                                int.Parse(currentLine.Substring(87, 1).Trim()),
-                                int.Parse(currentLine.Substring(88, 1).Trim()),
+                                int.Parse(currentLine.Substring(87, 1).Trim() == "" ? "0" : currentLine.Substring(87, 1).Trim()),
+                                int.Parse(currentLine.Substring(88, 1).Trim() == "" ? "0" : currentLine.Substring(88, 1).Trim()),
                                 currentLine.Substring(89, 1).Trim()
                                 );
 

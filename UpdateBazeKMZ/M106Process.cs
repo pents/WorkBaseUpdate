@@ -10,7 +10,7 @@ namespace UpdateBazeKMZ
 {
     public class File_M106 : FileProcces
     {
-        public File_M106(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = false; }
+        public File_M106(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = false; updateRequired = true; }
 
         private string _checkRecord = "";
 
@@ -29,16 +29,12 @@ namespace UpdateBazeKMZ
 
         protected override void processFile(string currentLine)
         {
-            _checkRecord = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBAssemblyes WHERE DetailWhereTo = {0} AND DetailWhat = {1}",
-                                                       currentLine.Substring(0,25).Trim(),
-                                                       currentLine.Substring(25,25).Trim()));
 
-            if (_checkRecord == "0")
-            {
-                dataTable.Rows.Add(currentLine.Substring(0, 25).Trim(),
-                                   currentLine.Substring(25, 25).Trim(),
-                                   currentLine.Substring(50).Trim());
-            }
+            dataTable.Rows.Add(currentLine.Substring(0, 25).Trim(),
+                                currentLine.Substring(25, 25).Trim(),
+                                currentLine.Substring(50).Trim());
+            OnProgressAsyncWriteRequired(70000);
+       
         }
     }
 }

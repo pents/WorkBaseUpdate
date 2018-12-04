@@ -17,7 +17,8 @@ namespace UpdateBazeKMZ
 
     public partial class FrmMain : Form
     {
-       
+
+        private Dictionary<int, FileProcces> procFiles;
         //----------------------------------------------------------------------------------------------------------
         #region Конструкторы класса формы
 
@@ -30,6 +31,19 @@ namespace UpdateBazeKMZ
             // Initialization of database connection
             DBConnectionSettings dbSettings = new DBConnectionSettings("10.255.7.203", "SGT_MMC", "UsersSGT", "123QWEasd", false);
 
+            procFiles = new Dictionary<int, FileProcces>()
+            {
+                { 0, new File_M101(cmdImportM101.Tag.ToString()) },
+                { 1, new File_GRP(cmdImportGP.Tag.ToString()) },
+                { 2, new File_M106(cmdLoadM106.Tag.ToString()) },
+                { 3, new File_CSMR(cmdLoadCSMR.Tag.ToString()) },
+                { 4, new File_NRM(cmdLoadNRM.Tag.ToString()) },
+                { 5, new File_PTN(cmdLoadPTN.Tag.ToString()) },
+                { 6, new File_Marsh(cmdLoadNRM.Tag.ToString()) },
+                { 7, new File_PER300(cmdPer300.Tag.ToString()) },
+                { 8, new File_OSMT(cmdOSTM.Tag.ToString()) },
+                { 9, new File_M104(M104Load_Click.Tag.ToString()) } 
+            };
         }
 
         #endregion
@@ -66,7 +80,7 @@ namespace UpdateBazeKMZ
             ThreadPool.QueueUserWorkItem(
             new WaitCallback(delegate(object state) 
             {
-                exec_FileLoad(new File_M104(clickedBtn.Tag.ToString())); // @"\\192.168.16.50\BazaOtd\PER300.txt"
+                exec_FileLoad(procFiles[int.Parse(clickedBtn.AccessibleName)]);
             }), 
             null);
         }

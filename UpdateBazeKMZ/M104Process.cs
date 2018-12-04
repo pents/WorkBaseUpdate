@@ -8,7 +8,7 @@ namespace UpdateBazeKMZ
 {
     public class File_M104 : FileProcces
     {
-        public File_M104(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
+        public File_M104(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true;}
 
         private DataTable getTable()
         {

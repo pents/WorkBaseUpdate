@@ -13,6 +13,7 @@ namespace UpdateBazeKMZ
         {
             dataTable = getTable();
             deleteRequired = false;
+            updateRequired = true;
         }
 
         private DataTable getTable()
@@ -32,13 +33,7 @@ namespace UpdateBazeKMZ
 
         protected override void processFile(string currentLine)
         {
-            string DetailID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDetailID WHERE Detail = '{0}'",
-                              currentLine.Substring(3, 25).Trim()));
-            if (DetailID != "0")
-            {
-                cHandle.ExecuteQuery(string.Format("DELETE FROM TBDetailID WHERE Detail = '{0}'",
-                              currentLine.Substring(3, 25).Trim()));
-            }
+            
             dataTable.Rows.Add(currentLine.Substring(3, 25).Trim(),
                    currentLine.Substring(28, 1).Trim(),
                    currentLine.Substring(88).Trim(),

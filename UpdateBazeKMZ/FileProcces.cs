@@ -25,6 +25,7 @@ namespace UpdateBazeKMZ
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
         protected DataTable dataTable = null;
         protected bool deleteRequired;
+        protected bool updateRequired = false;
 
         private int linesCount;
         private int currentLineNumber = 1;
@@ -83,7 +84,14 @@ namespace UpdateBazeKMZ
 
         private void Write(DataTable dt, string tableName)
         {
-            cHandle.InsertBulkQuery(dt, tableName);
+            if (updateRequired)
+            {
+                cHandle.UpdateBulkQuery(dt, tableName);
+            }
+            else
+            {
+                cHandle.InsertBulkQuery(dt, tableName);
+            }
         }
 
         private void WriteAsync(DataTable dataTable, string tableName)
@@ -95,6 +103,7 @@ namespace UpdateBazeKMZ
                     Write(dt, tableName);
                 }
                 ), null); // writer thread start
+            dataTable.Clear();
         }
 
         private void progressStateUpdate()
