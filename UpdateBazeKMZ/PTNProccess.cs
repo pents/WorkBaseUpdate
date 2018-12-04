@@ -12,10 +12,9 @@ namespace UpdateBazeKMZ
 {
     public class File_PTN : FileProcces
     {
-        public File_PTN(string filePath) : base(filePath)
+        public File_PTN(string filePath) : base(filePath, requiredOperation.DELETE)
         {
             dataTable = getTable();
-            deleteRequired = true;
             loadTBDeps();
             loadTBDetail();
             loadTBEquip();

@@ -11,10 +11,9 @@ namespace UpdateBazeKMZ
 {
     public class File_Marsh : FileProcces
     {
-        public File_Marsh(string filePath) : base(filePath)
+        public File_Marsh(string filePath) : base(filePath, requiredOperation.DELETE)
         {
             dataTable = getTable();
-            deleteRequired = true;
             loadDetails();
         }
 

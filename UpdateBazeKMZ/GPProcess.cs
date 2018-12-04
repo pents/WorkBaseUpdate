@@ -9,11 +9,9 @@ namespace UpdateBazeKMZ
 {
     public class File_GRP : FileProcces
     {
-        public File_GRP(string filePath) : base(filePath)
+        public File_GRP(string filePath) : base(filePath, requiredOperation.UPDATE)
         {
             dataTable = getTable();
-            deleteRequired = false;
-            updateRequired = true;
         }
 
         private DataTable getTable()

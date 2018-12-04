@@ -12,7 +12,10 @@ namespace UpdateBazeKMZ
     
     public class File_PER300 : FileProcces
     {
-        public File_PER300(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
+        public File_PER300(string filePath) : base(filePath, requiredOperation.DELETE)
+        {
+            dataTable = getTable(); 
+        }
 
         private DataTable getTable()
         {

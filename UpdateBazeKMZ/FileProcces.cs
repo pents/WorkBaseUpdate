@@ -13,6 +13,7 @@ namespace UpdateBazeKMZ
 
     public abstract class FileProcces
     {
+        protected enum requiredOperation { DELETE, UPDATE, NONE }
         public delegate void ProgressEvent(LoadProgressArgs args);
 
         public event ProgressEvent progressChanged;
@@ -24,16 +25,16 @@ namespace UpdateBazeKMZ
 
         protected ConnectionHandler cHandle = ConnectionHandler.GetInstance();
         protected DataTable dataTable = null;
-        protected bool deleteRequired;
-        protected bool updateRequired = false;
 
+        private requiredOperation _operation;
         private int linesCount;
         private int currentLineNumber = 1;
         private bool _inProgress = false;
         
 
-        protected FileProcces(string filePath)
+        protected FileProcces(string filePath, requiredOperation operation = requiredOperation.NONE)
         {
+            _operation = operation;
             FilePath = filePath;
             FileName = "";
             for (int i = FilePath.Length-1; FilePath[i] != '\\'; --i)
@@ -84,7 +85,7 @@ namespace UpdateBazeKMZ
 
         private void Write(DataTable dt, string tableName)
         {
-            if (updateRequired)
+            if (_operation == requiredOperation.UPDATE)
             {
                 cHandle.UpdateBulkQuery(dt, tableName);
             }
@@ -116,7 +117,7 @@ namespace UpdateBazeKMZ
 
         public void ReadFile()
         {
-            if (deleteRequired) cHandle.ExecuteQuery(string.Format("DELETE FROM {0}", dataTable.TableName));
+            if (_operation == requiredOperation.DELETE) cHandle.ExecuteQuery(string.Format("DELETE FROM {0}", dataTable.TableName));
             OnProgressNotify(string.Format("Инициализация {0}...", FileName));
             linesCount = totalLines(FilePath);
 

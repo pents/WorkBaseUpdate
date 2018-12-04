@@ -10,7 +10,10 @@ namespace UpdateBazeKMZ
 {
     public class File_OSMT : FileProcces
     {
-        public File_OSMT(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
+        public File_OSMT(string filePath) : base(filePath, requiredOperation.DELETE)
+        {
+            dataTable = getTable(); 
+        }
 
         private DataTable getTable()
         {

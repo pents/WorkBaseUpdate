@@ -11,7 +11,10 @@ namespace UpdateBazeKMZ
 {
     public class File_NRM : FileProcces
     {
-        public File_NRM(string filePath) : base(filePath) { dataTable = getTable(); deleteRequired = true; }
+        public File_NRM(string filePath) : base(filePath, requiredOperation.DELETE)
+        {
+            dataTable = getTable(); 
+        }
 
         private DataTable getTable()
         {

@@ -11,10 +11,9 @@ namespace UpdateBazeKMZ
     {
 
 
-        public File_M104(string filePath) : base(filePath)
+        public File_M104(string filePath) : base(filePath, requiredOperation.DELETE)
         {
             dataTable = getTable();
-            deleteRequired = true;
             loadTBDetail();
         }
 
