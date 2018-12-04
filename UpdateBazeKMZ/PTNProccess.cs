@@ -97,6 +97,7 @@ namespace UpdateBazeKMZ
                                                     currentLine.Substring(37,2).Trim()
                                                     ));
                 _depID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBDeps WHERE Dep + Sector = '{0}'", currentLine.Substring(34, 5).Trim()));
+                HTDeps.Add(currentLine.Substring(34, 5).Trim(), _depID);
             }
             else
             {
@@ -107,15 +108,16 @@ namespace UpdateBazeKMZ
 
             if (HTEquip[_depID + currentLine.Substring(39, 10).Trim().ToString()] == null)
             {
-                return;
-                //cHandle.ExecuteQuery(string.Format("INSERT INTO TBEquipmets(DepID, Equipment) VALUES ({0},'{1}')",
-                //                                    _depID,
-                //                                    currentLine.Substring(39, 10).Trim()
-                //                                    ));
-                //_equipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = '{1}'",
-                //                                                    _depID,
-                //                                                    currentLine.Substring(39, 10)
-                //                                                    ));
+                
+                cHandle.ExecuteQuery(string.Format("INSERT INTO TBEquipmets(DepID, Equipment) VALUES ({0},'{1}')",
+                                                    _depID,
+                                                    currentLine.Substring(39, 10).Trim()
+                                                    ));
+                _equipID = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBEquipmets WHERE DepID = {0} AND Equipment = '{1}'",
+                                                                    _depID,
+                                                                    currentLine.Substring(39, 10)
+                                                                    ));
+                HTEquip.Add(_depID + currentLine.Substring(39, 10).Trim().ToString(), _equipID);
             }
             else
             {
@@ -129,19 +131,27 @@ namespace UpdateBazeKMZ
             double stm = Convert.ToDouble(currentLine.Substring(74, 10).Trim().Replace('.', ',')); //Станкоминуты
             int proc = Convert.ToInt32(currentLine.Substring(84, 3).Trim()); //Процент возврата
 
+            int detID = int.Parse(_detailID);
+            string operation = currentLine.Substring(28, 6).Trim();
+            int depid = int.Parse(_depID);
+            int eqID = int.Parse(_equipID);
+            int rank = int.Parse(currentLine.Substring(49, 1).Trim() == "" || currentLine.Substring(49, 1).Trim() == "\0"  ? "0" : currentLine.Substring(49, 1).Trim());
+            int mex = int.Parse(currentLine.Substring(87, 1).Trim() == "" ? "0" : currentLine.Substring(87, 1).Trim());
+            int kvn = int.Parse(currentLine.Substring(88, 1).Trim() == "" ? "0" : currentLine.Substring(88, 1).Trim());
+            string pruch = currentLine.Substring(89, 1).Trim();
 
-            dataTable.Rows.Add(int.Parse(_detailID),
-                                currentLine.Substring(28, 6).Trim(),
-                                int.Parse(_depID),
-                                int.Parse(_equipID),
-                                int.Parse(currentLine.Substring(49, 1).Trim() == "" ? "0" : currentLine.Substring(49, 1).Trim()),
+            dataTable.Rows.Add( detID,
+                                operation,
+                                depid,
+                                eqID,
+                                rank,
                                 (float)nrm,
                                 (float)ras,
                                 (float)stm,
                                 proc,
-                                int.Parse(currentLine.Substring(87, 1).Trim() == "" ? "0" : currentLine.Substring(87, 1).Trim()),
-                                int.Parse(currentLine.Substring(88, 1).Trim() == "" ? "0" : currentLine.Substring(88, 1).Trim()),
-                                currentLine.Substring(89, 1).Trim()
+                                mex,
+                                kvn,
+                                pruch
                                 );
 
 
