@@ -9,6 +9,8 @@ namespace UpdateBazeKMZ
 {
     public class File_M104 : FileProcces
     {
+
+
         public File_M104(string filePath) : base(filePath)
         {
             dataTable = getTable();
@@ -27,8 +29,9 @@ namespace UpdateBazeKMZ
                 HTDetail.Add(row["Detail"].ToString(), row["ID"]);
             }
             Data_TBDeps.Clear();
+            
         }
-
+        
         private DataTable getTable()
         {
             DataTable dt = new DataTable();
@@ -44,7 +47,7 @@ namespace UpdateBazeKMZ
             dt.Columns.Add("TypeAssembly",         typeof(int));
             dt.Columns.Add("Sign",                 typeof(int));
             dt.Columns.Add("PrimaryApplicability", typeof(string));
-
+            
             return dt;
         }
 

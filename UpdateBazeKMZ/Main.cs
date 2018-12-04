@@ -17,8 +17,8 @@ namespace UpdateBazeKMZ
 
     public partial class FrmMain : Form
     {
-
-        private Dictionary<int, FileProcces> procFiles;
+        // Dictionary<ButtonTagNumber, Object to process>
+        private Dictionary<int, Lazy<FileProcces>> procFiles;
         //----------------------------------------------------------------------------------------------------------
         #region Конструкторы класса формы
 
@@ -31,18 +31,18 @@ namespace UpdateBazeKMZ
             // Initialization of database connection
             DBConnectionSettings dbSettings = new DBConnectionSettings("10.255.7.203", "SGT_MMC", "UsersSGT", "123QWEasd", false);
 
-            procFiles = new Dictionary<int, FileProcces>()
+            procFiles = new Dictionary<int, Lazy<FileProcces>>()
             {
-                { 0, new File_M101(cmdImportM101.Tag.ToString()) },
-                { 1, new File_GRP(cmdImportGP.Tag.ToString()) },
-                { 2, new File_M106(cmdLoadM106.Tag.ToString()) },
-                { 3, new File_CSMR(cmdLoadCSMR.Tag.ToString()) },
-                { 4, new File_NRM(cmdLoadNRM.Tag.ToString()) },
-                { 5, new File_PTN(cmdLoadPTN.Tag.ToString()) },
-                { 6, new File_Marsh(cmdLoadRoutes.Tag.ToString()) },
-                { 7, new File_PER300(cmdPer300.Tag.ToString()) },
-                { 8, new File_OSMT(cmdOSTM.Tag.ToString()) },
-                { 9, new File_M104(M104Load_Click.Tag.ToString()) } 
+                { 0, new Lazy<FileProcces>(() => new File_M101(cmdImportM101.Tag.ToString())) },
+                { 1, new Lazy<FileProcces>(() => new File_GRP(cmdImportGP.Tag.ToString())) },
+                { 2, new Lazy<FileProcces>(() => new File_M106(cmdLoadM106.Tag.ToString())) },
+                { 3, new Lazy<FileProcces>(() => new File_CSMR(cmdLoadCSMR.Tag.ToString())) },
+                { 4, new Lazy<FileProcces>(() => new File_NRM(cmdLoadNRM.Tag.ToString())) },
+                { 5, new Lazy<FileProcces>(() => new File_PTN(cmdLoadPTN.Tag.ToString())) },
+                { 6, new Lazy<FileProcces>(() => new File_Marsh(cmdLoadRoutes.Tag.ToString())) },
+                { 7, new Lazy<FileProcces>(() => new File_PER300(cmdPer300.Tag.ToString())) },
+                { 8, new Lazy<FileProcces>(() => new File_OSMT(cmdOSTM.Tag.ToString())) },
+                { 9, new Lazy<FileProcces>(() => new File_M104(M104Load_Click.Tag.ToString())) } 
             };
         }
 
@@ -72,6 +72,11 @@ namespace UpdateBazeKMZ
         #endregion
 
         //-----------------------------------------------------------------------------------------------------------------------------------------
+        
+        public void AddProcessToList(int identifier, Lazy<FileProcces> newProcess)
+        {
+            procFiles.Add(identifier, newProcess);
+        }
 
         private void LoadFile_Click(object sender, EventArgs e)
         {
@@ -80,12 +85,16 @@ namespace UpdateBazeKMZ
             ThreadPool.QueueUserWorkItem(
             new WaitCallback(delegate(object state) 
             {
-                exec_FileLoad(procFiles[int.Parse(clickedBtn.AccessibleName)]);
+                exec_LazyFileLoad(procFiles[int.Parse(clickedBtn.AccessibleName)]);
             }), 
             null);
         }
         // Only need to call threadPool.QueueUserWorkItem or any other async starting operation with this
 
+        private void exec_LazyFileLoad(Lazy<FileProcces> file)
+        {
+            exec_FileLoad(file.Value);
+        }
 
         private void exec_FileLoad(FileProcces file)
         {
