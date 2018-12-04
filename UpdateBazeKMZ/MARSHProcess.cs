@@ -49,7 +49,8 @@ namespace UpdateBazeKMZ
             if (HTDetail[currentLine.Substring(0, 25).Trim()] == null)
             {
                 OnProgressNotify(string.Format("Для Detail = {0} не найден DetailID", currentLine.Substring(0, 25).Trim()));
-            }else
+            }
+            else
             {
                
                dataTable.Rows.Add(int.Parse(HTDetail[currentLine.Substring(0, 25).Trim()].ToString()), currentLine.Substring(25).Trim());
