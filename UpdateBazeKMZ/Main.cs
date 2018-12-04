@@ -39,7 +39,7 @@ namespace UpdateBazeKMZ
                 { 3, new File_CSMR(cmdLoadCSMR.Tag.ToString()) },
                 { 4, new File_NRM(cmdLoadNRM.Tag.ToString()) },
                 { 5, new File_PTN(cmdLoadPTN.Tag.ToString()) },
-                { 6, new File_Marsh(cmdLoadNRM.Tag.ToString()) },
+                { 6, new File_Marsh(cmdLoadRoutes.Tag.ToString()) },
                 { 7, new File_PER300(cmdPer300.Tag.ToString()) },
                 { 8, new File_OSMT(cmdOSTM.Tag.ToString()) },
                 { 9, new File_M104(M104Load_Click.Tag.ToString()) } 

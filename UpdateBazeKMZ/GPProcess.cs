@@ -37,7 +37,7 @@ namespace UpdateBazeKMZ
             dataTable.Rows.Add(currentLine.Substring(3, 25).Trim(),
                    currentLine.Substring(28, 1).Trim(),
                    currentLine.Substring(88).Trim(),
-                   currentLine.Substring(46, 25).Trim(),
+                   currentLine.Substring(45, 25).Trim(),
                    currentLine.Substring(73, 15).Trim()
                    );
             OnProgressAsyncWriteRequired(50000);
