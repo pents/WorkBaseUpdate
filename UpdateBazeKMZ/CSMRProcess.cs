@@ -58,18 +58,10 @@ namespace UpdateBazeKMZ
             return dt;
         }
 
-        private void updateTable(string currentLine)
-        {
-
-
-        }
-
         protected override void processFile(string currentLine)
         {
 
-            string semiResult = cHandle.ExecuteOneElemQuery(string.Format("SELECT ID FROM TBStorage WHERE Number = '{0}' AND GroupLeader = '{1}'",
-                                                        currentLine.Substring(136, 3).Trim(), currentLine.Substring(94, 2).Trim()));
-            if (semiResult == "0")
+            if (HTStorage[$"{currentLine.Substring(136, 3).Trim()}{currentLine.Substring(94, 2).Trim()}"] == null)
             {
                 cHandle.ExecuteQuery(string.Format("INSERT INTO TBStorage (Number, GroupLeader) VALUES ('{0}','{1}')", 
                                         currentLine.Substring(136,3).Trim(), currentLine.Substring(94,2).Trim()));
