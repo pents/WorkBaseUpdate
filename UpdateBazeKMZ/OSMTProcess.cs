@@ -30,8 +30,10 @@ namespace UpdateBazeKMZ
         {
 
             dataTable.Rows.Add(
-                currentLine.Substring(0, 3).Trim(), currentLine.Substring(3, 2).Trim(),
-                currentLine.Substring(5, 12).Trim(), currentLine.Substring(113, 12).Trim()
+                currentLine.Substring(0, 3).Trim(), 
+                currentLine.Substring(3, 2).Trim(),
+                currentLine.Substring(5, 12).Trim(), 
+                float.Parse(currentLine.Substring(113, 12).Trim().Replace('.',','))
                 );
 
         }
