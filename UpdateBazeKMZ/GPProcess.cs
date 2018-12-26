@@ -25,6 +25,7 @@ namespace UpdateBazeKMZ
             dt.Columns.Add("Name",     typeof(string));
             dt.Columns.Add("FUse",     typeof(string));
             dt.Columns.Add("BaseProd", typeof(string));
+            dt.Columns.Add("NGroup",   typeof(string));
 
             return dt;
         }
@@ -36,7 +37,8 @@ namespace UpdateBazeKMZ
                    currentLine.Substring(28, 1).Trim(),
                    currentLine.Substring(88).Trim(),
                    currentLine.Substring(45, 25).Trim(),
-                   currentLine.Substring(73, 15).Trim()
+                   currentLine.Substring(73, 15).Trim(),
+                   currentLine.Substring(89, 2).Trim()
                    );
             OnProgressAsyncWriteRequired(50000);
         }
