@@ -109,9 +109,11 @@ namespace UpdateBazeKMZ
 
         private void progressStateUpdate()
         {
-            if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount - 1))
+
+
+            if ((currentLineNumber % (linesCount / 100) == 0) || (currentLineNumber == linesCount))
             {
-                OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount - 1)); // текущее состояние загрузки
+                OnProgressChanged(new LoadProgressArgs(currentLineNumber, linesCount)); // текущее состояние загрузки
             }
         }
 

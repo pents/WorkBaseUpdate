@@ -35,10 +35,10 @@ namespace UpdateBazeKMZ
             
             dataTable.Rows.Add(currentLine.Substring(3, 25).Trim(),
                    currentLine.Substring(28, 1).Trim(),
-                   currentLine.Substring(88, 61).Trim(),
+                   currentLine.Substring(88, 60).Trim(),
                    currentLine.Substring(45, 25).Trim(),
                    currentLine.Substring(73, 15).Trim(),
-                   currentLine.Substring(148, 2).Trim()
+                   currentLine.Substring(148, 2).Trim() == "" ? "00" : currentLine.Substring(148, 2).Trim()
                    );
             OnProgressAsyncWriteRequired(50000);
         }
