@@ -52,6 +52,7 @@ namespace UpdateBazeKMZ
                 HTEquip.Add(test, row["ID"]);
             }
             Data_TBDeps.Clear();
+
         }
 
         private void loadTBDetail()
